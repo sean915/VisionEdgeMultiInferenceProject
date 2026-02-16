@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>구조 설명서 피드백 정리</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: #f8f9fa;
+    }
+    h1 {
+      color: #1a365d;
+      border-bottom: 3px solid #2b6cb0;
+      padding-bottom: 0.5rem;
+      font-size: 1.75rem;
+    }
+    h2 {
+      color: #2c5282;
+      margin-top: 2rem;
+      font-size: 1.25rem;
+    }
+    h3 {
+      color: #2b6cb0;
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.75rem 0;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 0.6rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    th {
+      background: #edf2f7;
+      font-weight: 600;
+      color: #2d3748;
+      width: 140px;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f7fafc; }
+    .section {
+      background: #fff;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .action-summary {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #ebf8ff 0%, #e6fffa 100%);
+      border-radius: 8px;
+      border-left: 4px solid #2b6cb0;
+    }
+    .action-summary h2 { margin-top: 0; }
+    .action-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .action-list li {
+      padding: 0.4rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .action-list li::before {
+      content: '☐';
+      position: absolute;
+      left: 0;
+      color: #2b6cb0;
+    }
+    .action-list .category {
+      font-weight: 600;
+      color: #2c5282;
+      margin-top: 1rem;
+      padding-left: 0;
+    }
+    .action-list .category::before { content: none; }
+    .action-list .category:first-child { margin-top: 0; }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 4px;
+      background: #e53e3e;
+      color: #fff;
+    }
+    .badge.required { background: #c53030; }
+    .badge.decided { background: #276749; }
+    .badge.pending { background: #744210; }
+    ul { margin: 0.5rem 0; padding-left: 1.5rem; }
+    .meta { color: #718096; font-size: 0.9rem; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+
+  <h1>구조 설명서 피드백 정리</h1>
+  <p class="meta">구조 설명서 검토 피드백을 항목별로 정리한 문서</p>
+
+  <!-- 0. 공통 원칙 -->
+  <div class="section">
+    <h2>0. 공통 원칙 / 전제</h2>
+    <table>
+      <tr><th>항목</th><td>내용</td></tr>
+      <tr><th>Stop 처리 주체</th><td>Stop 기능은 <strong>클라이언트에서만</strong> 처리</td></tr>
+      <tr><th>서버 역할</th><td>서버 비즈니스 로직에는 Stop 관련 기능 없음</td></tr>
+      <tr><th>판단 기준</th><td><strong>윈도우 사이즈(window size)</strong> 기반</td></tr>
+    </table>
+  </div>
+
+  <!-- 1. Threshold / Config -->
+  <div class="section">
+    <h2>1. Threshold / Config 구조</h2>
+    <table>
+      <tr><th>Threshold 개수</th><td>클래스 3개 × 각 2개 = <strong>총 6개 값</strong></td></tr>
+      <tr><th>전달 방식</th><td>Config 6개 값은 <strong>구조체(struct)</strong>로 전달</td></tr>
+      <tr><th>협의 상태</th><td>CNS와 협의 완료</td></tr>
+      <tr><th><span class="badge required">수정 필수</span></th><td><code>configThreshold</code> 필수 수정</td></tr>
+      <tr><th><span class="badge required">타입 수정</span></th><td><code>normal</code> / <code>abnormal</code> / <code>empty</code> 각각에 대해 <strong>abnormal / questionable threshold score</strong> 포함 필수</td></tr>
+    </table>
+  </div>
+
+  <!-- 2. Timestamp / PLC -->
+  <div class="section">
+    <h2>2. Timestamp / PLC 관련</h2>
+    <table>
+      <tr><th><span class="badge required">필수 수정</span></th><td>timestamp는 <strong>PLC 기준</strong>으로 필수 수정</td></tr>
+      <tr><th>PLC 값</th><td>PLC 값 자체 수정 필요 ("plc 값 고쳐야함" 메모)</td></tr>
+      <tr><th><strong>제약사항</strong></th><td>런타임에서 PLC 관련 값은 설비 상태 값이 변할 때 <strong>이벤트성으로만</strong> 처리, <strong>함수를 통해서</strong> 반영</td></tr>
+    </table>
+  </div>
+
+  <!-- 3. PLC API -->
+  <div class="section">
+    <h2>3. PLC API 추가</h2>
+    <table>
+      <tr><th>필요 사항</th><td><strong>PLC 정보 함수(API)</strong> 추가</td></tr>
+      <tr><th>구현 범위</th><td>내부 로직 구현 필요</td></tr>
+    </table>
+  </div>
+
+  <!-- 4. 모델 폴더 -->
+  <div class="section">
+    <h2>4. 모델 폴더/경로 규칙</h2>
+    <table>
+      <tr><th><span class="badge decided">결정</span></th><td>모델 폴더를 <strong>DLL과 같은 경로에 두지 않음</strong></td></tr>
+      <tr><th><span class="badge decided">결정</span></th><td>별도 모델 폴더를 두고 <strong>이름으로 구별</strong></td></tr>
+      <tr><th><span class="badge pending">추후 결정</span></th><td>모델 네이밍 룰은 추후 확정</td></tr>
+    </table>
+  </div>
+
+  <!-- 5. Input JSON -->
+  <div class="section">
+    <h2>5. Input JSON 처리 규칙</h2>
+    <table>
+      <tr><th>Input 구성</th><td>Input에 <strong>JSON 파일 포함</strong></td></tr>
+      <tr><th>로딩 방식</th><td><strong>모델 경로 기반</strong>으로 JSON 가져오기</td></tr>
+    </table>
+  </div>
+
+  <!-- 6. 콜백/결과 -->
+  <div class="section">
+    <h2>6. 콜백/결과 구조 변경</h2>
+    <table>
+      <tr><th><span class="badge decided">결정</span></th><td>콜백에서 <strong>resultCount 제거</strong></td></tr>
+      <tr><th><span class="badge decided">결정</span></th><td>result vector <strong>3개 → 1개</strong>로 통합</td></tr>
+    </table>
+  </div>
+
+  <!-- 7. 대시보드/프리뷰 -->
+  <div class="section">
+    <h2>7. 대시보드/프리뷰 출력 정책</h2>
+    <table>
+      <tr><th>대시보드</th><td>전체 스트리밍</td></tr>
+      <tr><th>프리뷰(Preview)</th><td>검사 결과 이미지만</td></tr>
+      <tr><th>관련</th><td>resultCount 제거와 연관 (중복 강조)</td></tr>
+    </table>
+  </div>
+
+  <!-- 8. PPT/문서 -->
+  <div class="section">
+    <h2>8. PPT/문서 기준 변경 사항</h2>
+    <table>
+      <tr><th>Output</th><td>PPT 기준으로 output 값 변경</td></tr>
+      <tr><th>4.2 output 통합표</th><td>추후 논의 예정 (논의 시작: errorcode부터)</td></tr>
+      <tr><th>4.4</th><td>알고리즘 DLL 호출자가 매핑하는 내용 포함</td></tr>
+      <tr><th>6.. 항목</th><td>최종 논의 시 삭제 여부 결정</td></tr>
+    </table>
+  </div>
+
+  <!-- 9. API 문서 -->
+  <div class="section">
+    <h2>9. API 문서 정리 요청사항</h2>
+    <p><strong>"제공 API 요약"</strong>에 아래를 명확히 기재:</p>
+    <table>
+      <tr><th>시점</th><td>호출 시점</td></tr>
+      <tr><th>Input</th><td>input 파라미터</td></tr>
+      <tr><th>반환값</th><td>반환값</td></tr>
+      <tr><th>호출 형태</th><td>"한번(one-shot)" vs "상시(continuous)"</td></tr>
+      <tr><th>Initialize</th><td>설명 수정</td></tr>
+      <tr><th>Stop</th><td>LGENS 것 반영 (삭제 여부는 추후 결정)</td></tr>
+      <tr><th>getStatus</th><td>상세 분할 설명, 플래그 형태(DLL 살아있음/없음 수준)로 구분</td></tr>
+    </table>
+  </div>
+
+  <!-- 10. 문서 섹션 -->
+  <div class="section">
+    <h2>10. 문서 섹션 통일/삭제</h2>
+    <table>
+      <tr><th>9.2</th><td>1, 2, 3, 4 항목 동일하게 통일</td></tr>
+      <tr><th>삭제 대상</th><td>9.3, 9.4, 9.5, 10 섹션 삭제</td></tr>
+    </table>
+  </div>
+
+  <!-- 액션 아이템 요약 -->
+  <div class="action-summary">
+    <h2>액션 아이템 요약</h2>
+
+    <h3>구현</h3>
+    <ul class="action-list">
+      <li>PLC 정보 함수(API) 추가 + 내부 로직</li>
+    </ul>
+
+    <h3>수정</h3>
+    <ul class="action-list">
+      <li>timestamp를 PLC 기준으로 필수 수정</li>
+      <li>PLC 값 수정</li>
+      <li><code>configThreshold</code> / 타입 수정 (normal / abnormal / empty + abnormal / questionable threshold score 포함)</li>
+    </ul>
+
+    <h3>변경</h3>
+    <ul class="action-list">
+      <li>콜백에서 resultCount 제거</li>
+      <li>result vector 3개 → 1개 통합</li>
+    </ul>
+
+    <h3>폴더/경로</h3>
+    <ul class="action-list">
+      <li>모델 폴더 분리 (DLL과 같은 경로 X)</li>
+      <li>모델 경로 기반 JSON 로딩</li>
+    </ul>
+
+    <h3>문서</h3>
+    <ul class="action-list">
+      <li>PPT output 값 변경</li>
+      <li>API 요약 / Initialize / getStatus / Stop 항목 정리</li>
+      <li>9.3 ~ 10 삭제</li>
+      <li>9.2 통일</li>
+    </ul>
+
+    <h3>논의 필요</h3>
+    <ul class="action-list">
+      <li>4.2 output 통합표 (errorcode부터)</li>
+      <li>6.. 삭제 여부</li>
+      <li>모델 네이밍 룰</li>
+      <li>Stop 삭제 여부</li>
+    </ul>
+  </div>
+
+</body>
+</html>

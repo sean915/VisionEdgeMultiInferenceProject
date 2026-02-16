@@ -1,0 +1,28 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="LogoOrange" Color="#FF7A1A"/>
+    <SolidColorBrush x:Key="LogoWhite" Color="#FFFFFF"/>
+
+    <!-- 라이트: 눈부심 줄이려고 완전 흰색 말고 약간 회색 -->
+    <SolidColorBrush x:Key="AppBg" Color="#F3F6FA"/>
+    <SolidColorBrush x:Key="TopBarBg" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="SidebarBg" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="CardBg" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="PanelBg" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="PanelBg2" Color="#FFFFFF"/>
+
+    <!-- ✅ Dark에 있던 FieldBg를 Light에도 추가 -->
+    <SolidColorBrush x:Key="FieldBg" Color="#F4F7FB"/>
+
+    <SolidColorBrush x:Key="LineSoft" Color="#D5DEE8"/>
+    <SolidColorBrush x:Key="LineHard" Color="#B8C6D6"/>
+
+    <SolidColorBrush x:Key="TextPrimary" Color="#0B1220"/>
+    <SolidColorBrush x:Key="TextSecondary" Color="#3A4A5E"/>
+    <SolidColorBrush x:Key="TextMuted" Color="#6B7D93"/>
+
+    <SolidColorBrush x:Key="Accent" Color="#FF6A00"/>
+    <SolidColorBrush x:Key="Good" Color="#1EAA61"/>
+    <SolidColorBrush x:Key="Bad" Color="#D32F2F"/>
+    <SolidColorBrush x:Key="Warn" Color="#B78100"/>
+</ResourceDictionary>

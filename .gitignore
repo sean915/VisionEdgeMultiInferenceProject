@@ -1,0 +1,96 @@
+# =========================
+# Visual Studio / .NET
+# =========================
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.rsuser
+*.userosscache
+*.sln.docstates
+
+# Build outputs / artifacts
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+ARM/
+ARM64/
+AnyCPU/
+out/
+artifacts/
+
+# NuGet / packages
+packages/
+*.nupkg
+# (PackageReference 쓰면 packages/는 없을 수도 있음)
+
+# Test results / coverage
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Logs
+*.log
+
+# =========================
+# C++ / MSVC (DLL 포함)
+# =========================
+# Intermediate files
+*.obj
+*.pch
+*.pdb
+*.idb
+*.ipdb
+*.iobj
+*.tlog
+*.ilk
+*.exp
+*.lib
+*.dll
+*.exe
+
+# VC database / IntelliSense
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+ipch/
+
+# MSBuild / VS temp
+_ReSharper*/
+*.DotSettings.user
+*.cache
+*.tmp
+
+# CMake (쓰는 경우)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+build/
+
+# =========================
+# WPF / XAML designer
+# =========================
+*.g.cs
+*.g.i.cs
+
+# =========================
+# Rider / VS Code
+# =========================
+.idea/
+.vscode/
+
+# =========================
+# OS junk
+# =========================
+Thumbs.db
+.DS_Store
+
+# =========================
+# Your custom folders
+# =========================
+Libraries/

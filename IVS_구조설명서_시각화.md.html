@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<!-- saved from url=(0194)http://blm.lgensol.com/plugins/servlet/jeditor_file_provider?imgId=ckupload202602134158226516793716883&fileName=IVS_%EA%B5%AC%EC%A1%B0%EC%84%A4%EB%AA%85%EC%84%9C_%EC%8B%9C%EA%B0%81%ED%99%94.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>IVS_구조설명서_시각화.md</title>
+
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="./IVS_구조설명서_시각화.md_files/mermaid.min.js.다운로드"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="ivs-intelligent-vision-sensor-%EA%B5%AC%EC%A1%B0-%EC%84%A4%EB%AA%85%EC%84%9C-based-on-lgeshm-pkg-prewelding">IVS (Intelligent Vision Sensor) 구조 설명서 (based on LGESHM PKG Prewelding)</h1>
+<h2 id="1-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EA%B0%9C%EC%9A%94">1. 시스템 개요</h2>
+<p>HM에서 수행된 PKG공정 약용접/소착 검출을 위해 개발된 IVS 기반으로 sw 구조 성명 자료입니다.</p>
+<hr>
+<h2 id="2-%EC%A0%84%EC%B2%B4-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98">2. 전체 시스템 아키텍처</h2>
+<pre><code class="language-mermaid"><div class="mermaid">%%{init: {'theme':'base', 'themeVariables': {'fontSize':'12px'}, 'flowchart':{'nodeSpacing':30, 'rankSpacing':40}}}%%
+graph TB
+    subgraph "Input Sources"
+        CAM[Camera/RTSP Stream]
+        PLC_IN[PLC Input<br>Cell ID, Pallete, Busy]
+        CONFIG[Configuration<br>Models, ROI, Thresholds]
+    end
+
+    subgraph "IVS Core Processing"
+        subgraph "Frame Task"
+            FRAME[Frame Producer]
+        end
+        
+        subgraph "Trigger Task"
+            TRIGGER[Trigger Detector<br>Object Tracking]
+            TRACKER[Trigger Tracker]
+        end
+        
+        subgraph "Abnormal Task"
+            ABNORMAL[Abnormal Detector<br>Defect Detection]
+            AB_TRACKER[Abnormal Tracker]
+        end
+        
+        subgraph "PLC Task"
+            PLC_COMM[PLC Communication<br>Read/Write]
+        end
+        
+        subgraph "IO Task"
+            VIDEO_SAVE[Video Saver]
+            STORAGE[Storage Manager]
+        end
+    end
+
+    subgraph "Outputs"
+        ALARM[PLC Alarm Output]
+        HEARTBEAT[PLC Heartbeat]
+        IMAGE[Detection Images<br>Original + Marked]
+        VIDEO[Video Clips]
+        LOG[CSV &amp; Log Files]
+    end
+
+    CAM --&gt; FRAME
+    FRAME --&gt; |Frame Queue| TRIGGER
+    CONFIG --&gt; TRIGGER
+    TRIGGER --&gt; |Trigger Queue| ABNORMAL
+    TRIGGER --&gt; TRACKER
+    CONFIG --&gt; ABNORMAL
+    ABNORMAL --&gt; AB_TRACKER
+    ABNORMAL --&gt; |Control Queue| PLC_COMM
+    PLC_IN --&gt; PLC_COMM
+    PLC_COMM --&gt; |Cell ID Queue| TRIGGER
+    PLC_COMM --&gt; ALARM
+    PLC_COMM --&gt; HEARTBEAT
+    ABNORMAL --&gt; |Event Queue| VIDEO_SAVE
+    ABNORMAL --&gt; IMAGE
+    ABNORMAL --&gt; LOG
+    TRIGGER --&gt; VIDEO_SAVE
+    VIDEO_SAVE --&gt; VIDEO
+    STORAGE --&gt; LOG
+
+    style CAM fill:#e1f5ff
+    style PLC_IN fill:#e1f5ff
+    style CONFIG fill:#e1f5ff
+    style ALARM fill:#ffe1e1
+    style HEARTBEAT fill:#ffe1e1
+    style IMAGE fill:#ffe1e1
+    style VIDEO fill:#ffe1e1
+    style LOG fill:#ffe1e1
+</div></code></pre>
+<hr>
+<h2 id="3-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%9D%90%EB%A6%84-data-flow">3. 데이터 흐름 (Data Flow)</h2>
+<pre><code class="language-mermaid"><div class="mermaid">%%{init: {'theme':'base', 'themeVariables': {'fontSize':'12px'}, 'sequence':{'actorMargin':40, 'boxMargin':5, 'width':120}}}%%
+sequenceDiagram
+    participant CAM as Camera
+    participant FT as Frame Task
+    participant TT as Trigger Task
+    participant PLC as PLC Task
+    participant AT as Abnormal Task
+    participant IO as IO Task
+
+    CAM-&gt;&gt;FT: Video Stream
+    loop Every Frame
+        FT-&gt;&gt;TT: Frame (np.ndarray)
+        TT-&gt;&gt;TT: Detect Object &amp; Track
+        alt Object Detected
+            TT-&gt;&gt;PLC: Request Cell ID
+            PLC--&gt;&gt;TT: Cell ID + Pallete
+            TT-&gt;&gt;AT: Trigger Frame + Metadata
+            AT-&gt;&gt;AT: Defect Detection
+            alt Defect Found
+                AT-&gt;&gt;PLC: Send Alarm
+                AT-&gt;&gt;IO: Save Detection
+                AT-&gt;&gt;IO: Write CSV/Log
+            else No Defect
+                AT-&gt;&gt;IO: Save Normal
+                AT-&gt;&gt;IO: Write CSV/Log
+            end
+            AT-&gt;&gt;IO: Video Frame Buffer
+        end
+    end
+    
+    loop Every 2 seconds
+        PLC-&gt;&gt;PLC: Read Busy Status
+        PLC-&gt;&gt;PLC: Send Heartbeat (0↔1)
+    end
+</div></code></pre>
+<hr>
+<h2 id="4-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-%EA%B0%84-%ED%86%B5%EC%8B%A0-%EA%B5%AC%EC%A1%B0">4. 프로세스 간 통신 구조</h2>
+<pre><code class="language-mermaid"><div class="mermaid">%%{init: {'theme':'base', 'themeVariables': {'fontSize':'12px'}, 'flowchart':{'nodeSpacing':30, 'rankSpacing':50}}}%%
+graph LR
+    subgraph "Queue Manager"
+        Q1[Frame Queue<br>maxsize=30]
+        Q2[Trigger Queue<br>maxsize=10]
+        Q3[Control Queue<br>maxsize=5]
+        Q4[Cell ID Queue<br>maxsize=1]
+        Q5[Pallete Queue<br>maxsize=1]
+        Q6[Event Queue<br>maxsize=100]
+    end
+
+    subgraph "Multiprocessing Architecture"
+        P1[Frame Process]
+        P2[Trigger Process]
+        P3[Abnormal Process]
+        P4[PLC Process]
+        P5[IO Process]
+    end
+
+    P1 --&gt;|put| Q1
+    Q1 --&gt;|get| P2
+    P2 --&gt;|put| Q2
+    Q2 --&gt;|get| P3
+    P3 --&gt;|put| Q3
+    Q3 --&gt;|get| P4
+    P4 --&gt;|put| Q4
+    P4 --&gt;|put| Q5
+    Q4 --&gt;|get| P2
+    Q5 --&gt;|get| P2
+    P3 --&gt;|put| Q6
+    Q6 --&gt;|get| P5
+
+    style P1 fill:#b3d9ff
+    style P2 fill:#b3d9ff
+    style P3 fill:#b3d9ff
+    style P4 fill:#b3d9ff
+    style P5 fill:#b3d9ff
+</div></code></pre>
+<hr>
+<h2 id="5-task-%EB%B3%84-%EC%83%81%EC%84%B8-%EB%AA%85%EC%84%B8">5. Task 별 상세 명세</h2>
+<h3 id="51-frame-task">5.1 Frame Task</h3>
+<blockquote>
+<p><strong>핵심 역할</strong>: 카메라/RTSP 스트림에서 프레임을 읽어 Frame Queue에 공급하는 <strong>프레임 생산자(Producer)</strong> 역할.
+스트림 연결 실패 시 자동 재연결을 시도하며, <strong>큐가 가득 차면 새 프레임을 버립니다</strong> (drop).</p>
+</blockquote>
+<pre><code class="language-mermaid"><div class="mermaid">%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px'}, 'flowchart':{'nodeSpacing':25, 'rankSpacing':35}}}%%
+graph TB
+    START([Start Frame Task])
+    INPUT[Input: Camera URL/Path]
+    INIT[Initialize VideoStream]
+    READ[Read Frame]
+    CHECK{Frame Valid?}
+    FULL{Queue Full?}
+    PUT[Put to Frame Queue]
+    DROP[Drop Frame]
+
+    START --&gt; INPUT
+    INPUT --&gt; INIT
+    INIT --&gt; READ
+    READ --&gt; CHECK
+    CHECK --&gt;|Yes| FULL
+    CHECK --&gt;|No| READ
+    FULL --&gt;|No| PUT
+    FULL --&gt;|Yes| DROP
+    PUT --&gt; READ
+    DROP --&gt; READ
+
+    style DROP fill:#ffe6e6
+</div></code></pre>
+<h4 id="frame-task-inputoutput">Frame Task Input/Output</h4>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>타입</th>
+<th>설명</th>
+<th>크기/형식</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>INPUT</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Camera Source</td>
+<td><code>str</code></td>
+<td>카메라 경로 또는 RTSP URL</td>
+<td><code>rtsp://192.168.0.100:554/stream</code></td>
+</tr>
+<tr>
+<td><strong>자동 취득 (스트림에서 읽음)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>FPS</td>
+<td><code>float</code></td>
+<td>스트림에서 자동으로 읽어온 프레임레이트</td>
+<td><code>stream.fps</code> (예: 30.0)</td>
+</tr>
+<tr>
+<td>Resolution</td>
+<td><code>tuple</code></td>
+<td>스트림에서 자동으로 읽어온 해상도</td>
+<td><code>(width, height)</code> (예: 1920x1080)</td>
+</tr>
+<tr>
+<td><strong>OUTPUT</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Frame</td>
+<td><code>np.ndarray</code></td>
+<td>RGB 이미지 프레임</td>
+<td><code>shape=(H, W, 3), dtype=uint8</code></td>
+</tr>
+<tr>
+<td>Timestamp</td>
+<td><code>float</code></td>
+<td>프레임 타임스탬프</td>
+<td><code>time.time()</code></td>
+</tr>
+<tr>
+<td>Frame Queue</td>
+<td><code>Queue</code></td>
+<td>프레임 버퍼</td>
+<td><code>maxsize=30</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note</strong>: FPS와 Resolution은 <strong>입력 파라미터가 아닙니다</strong>.
+카메라 소스(RTSP URL 또는 동영상 파일)에 연결 후, <code>stream.fps</code>로 자동으로 읽어옵니다.</p>
+</blockquote>
+<hr>
+<h3 id="52-trigger-task">5.2 Trigger Task</h3>
+<blockquote>
+<p><strong>핵심 역할</strong>: 프레임에서 <strong>용접 대상 객체를 검출하고 추적</strong>하여 캡처 시점을 결정하는 <strong>트리거 생성자</strong> 역할.
+YOLO 모델로 객체를 검출하고, TriggerTracker로 상태를 추적하여 적절한 시점에 Abnormal Task로 전달합니다.
+<code>capture_flag</code> 또는 <code>capture_end_flag</code>가 True일 때만 Trigger Queue에 데이터를 전송합니다.</p>
+</blockquote>
+<pre><code class="language-mermaid"><div class="mermaid">%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px'}, 'flowchart':{'nodeSpacing':25, 'rankSpacing':35}}}%%
+graph TB
+    START([Start Trigger Task])
+    GET[Get Frame from Queue]
+    DETECT[Run Trigger Model<br>YOLO Detection]
+    FILTER[Filter by ROI]
+    TRACK[Update Tracker]
+    GET_CELL[Get Cell ID from Queue<br>비동기, 이전값 유지]
+    SHIFT{Camera Shifted?}
+    CHECK_FLAG{capture_flag OR<br>capture_end_flag?}
+    CREATE[Create TriggerDTO]
+    PUT[Put to Trigger Queue]
+    DISPLAY[Display Frame]
+    
+    START --&gt; GET
+    GET --&gt; DETECT
+    DETECT --&gt; FILTER
+    FILTER --&gt; TRACK
+    TRACK --&gt; GET_CELL
+    GET_CELL --&gt; SHIFT
+    SHIFT --&gt; CHECK_FLAG
+    CHECK_FLAG --&gt;|No| DISPLAY
+    CHECK_FLAG --&gt;|Yes| CREATE
+    CREATE --&gt; PUT
+    PUT --&gt; DISPLAY
+    DISPLAY --&gt; GET
+
+    style SHIFT fill:#ffe6e6
+    style CHECK_FLAG fill:#ffe6e6
+</div></code></pre>
+<h4 id="trigger-task-inputoutput">Trigger Task Input/Output</h4>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>타입</th>
+<th>설명</th>
+<th>형식</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>INPUT</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Frame Queue</td>
+<td><code>Queue[np.ndarray]</code></td>
+<td>입력 프레임 스트림</td>
+<td><code>shape=(H,W,3)</code></td>
+</tr>
+<tr>
+<td>Trigger Model</td>
+<td><code>str</code></td>
+<td>ONNX 모델 경로</td>
+<td><code>trigger_model.onnx</code></td>
+</tr>
+<tr>
+<td>Reference Image</td>
+<td><code>str</code></td>
+<td>카메라 기준 이미지</td>
+<td><code>reference.jpg</code></td>
+</tr>
+<tr>
+<td>ROI Settings</td>
+<td><code>list[ShapeDTO]</code></td>
+<td>관심 영역 설정</td>
+<td><code>[{"type":"box","data":[[x1,y1],[x2,y2]]}]</code></td>
+</tr>
+<tr>
+<td>Cell ID Queue</td>
+<td><code>Queue[str]</code></td>
+<td>PLC로부터 받은 Cell ID</td>
+<td><code>maxsize=1</code></td>
+</tr>
+<tr>
+<td>Pallete Queue</td>
+<td><code>Queue[int]</code></td>
+<td>PLC로부터 받은 Pallete 번호</td>
+<td><code>maxsize=1</code></td>
+</tr>
+<tr>
+<td><strong>PROCESSING</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Detection</td>
+<td><code>DetectionResultDTO</code></td>
+<td>객체 검출 결과</td>
+<td><code>boxes, labels, scores, masks</code></td>
+</tr>
+<tr>
+<td>Tracking</td>
+<td><code>TriggerTracker</code></td>
+<td>객체 추적 상태</td>
+<td><code>track_id, bbox, state</code></td>
+</tr>
+<tr>
+<td>Shift Detection</td>
+<td><code>bool</code></td>
+<td>카메라 이동 감지</td>
+<td><code>SSIM &lt; threshold</code></td>
+</tr>
+<tr>
+<td>Capture Decision</td>
+<td><code>bool</code></td>
+<td>캡처 신호 생성</td>
+<td><code>based on tracking logic</code></td>
+</tr>
+<tr>
+<td><strong>OUTPUT</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Trigger Queue</td>
+<td><code>Queue[TriggerDTO]</code></td>
+<td>트리거 정보</td>
+<td><code>maxsize=10</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>TriggerDTO 구조:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TriggerDTO</span>:</span>
+    capture_flag: bool              <span class="hljs-comment"># 캡처 중 신호 (True: 검출 수행)</span>
+    capture_end_flag: bool          <span class="hljs-comment"># 캡처 종료 신호 (True: 결과 집계 및 저장)</span>
+    cell_id: str                    <span class="hljs-comment"># Cell ID (15자)</span>
+    frame: np.ndarray               <span class="hljs-comment"># 시각화 프레임 (마킹됨)</span>
+    frame0: np.ndarray              <span class="hljs-comment"># 원본 프레임</span>
+    is_shift: bool                  <span class="hljs-comment"># 카메라 이동 여부</span>
+    shift_log: dict                 <span class="hljs-comment"># 이동 상세 정보</span>
+    elapsed_time: float             <span class="hljs-comment"># 처리 시간</span>
+</div></code></pre>
+<blockquote>
+<p><strong>Trigger Queue 전송 조건</strong> (실제 코드 기준):</p>
+<ul>
+<li><code>capture_flag=True</code>: 객체 추적 중, Abnormal Task에서 결함 검출 수행</li>
+<li><code>capture_end_flag=True</code>: 추적 종료, Abnormal Task에서 결과 집계 및 파일 저장</li>
+<li>둘 다 <code>False</code>면 <strong>Trigger Queue에 전송하지 않음</strong> (Display만 업데이트)</li>
+</ul>
+</blockquote>
+<hr>
+<h3 id="53-abnormal-task">5.3 Abnormal Task</h3>
+<blockquote>
+<p><strong>핵심 역할</strong>: 트리거된 프레임에서 <strong>용접 결함을 검출</strong>하고, 결과를 <strong>PLC 알람으로 전송</strong> 및 <strong>파일로 저장</strong>하는 <strong>결함 판정자</strong> 역할.
+<code>capture_flag=True</code> 프레임에서 결함 검출을 수행하고, <code>capture_end_flag=True</code>일 때 결과를 집계하여 저장합니다.</p>
+</blockquote>
+<pre><code class="language-mermaid"><div class="mermaid">%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px'}, 'flowchart':{'nodeSpacing':25, 'rankSpacing':35}}}%%
+graph TB
+    START([Start Abnormal Task])
+    GET[Get Trigger from Queue]
+    CHECK_CAP{capture_flag?}
+    DETECT[Run Abnormal Model<br>Defect Detection]
+    TRACK[Update Abnormal Tracker]
+    CHECK_END{capture_end_flag?}
+    FILTER[Filter &amp; Get Max Abnormal]
+    DECISION{Defect Found?}
+    CALC_ALARM[Calculate Alarm Value]
+    SEND_ALARM[Send to Control Queue]
+    MARK[Create Marked Image]
+    SAVE[Save Images<br>cv2.imwrite]
+    LOG[Write CSV &amp; Log Files]
+    CLEAR[Clear Tracker]
+    
+    START --&gt; GET
+    GET --&gt; CHECK_CAP
+    CHECK_CAP --&gt;|Yes| DETECT
+    CHECK_CAP --&gt;|No| CHECK_END
+    DETECT --&gt; TRACK
+    TRACK --&gt; CHECK_END
+    CHECK_END --&gt;|No| GET
+    CHECK_END --&gt;|Yes| FILTER
+    FILTER --&gt; DECISION
+    DECISION --&gt;|No Defect| SAVE
+    DECISION --&gt;|Defect| CALC_ALARM
+    CALC_ALARM --&gt; SEND_ALARM
+    SEND_ALARM --&gt; MARK
+    MARK --&gt; SAVE
+    SAVE --&gt; LOG
+    LOG --&gt; CLEAR
+    CLEAR --&gt; GET
+
+    style CHECK_CAP fill:#e6f3ff
+    style CHECK_END fill:#e6f3ff
+    style DECISION fill:#ffe6e6
+    style CALC_ALARM fill:#ffcccc
+</div></code></pre>
+<h4 id="abnormal-task-inputoutput">Abnormal Task Input/Output</h4>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>타입</th>
+<th>설명</th>
+<th>형식</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>INPUT</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Trigger Queue</td>
+<td><code>Queue[TriggerDTO]</code></td>
+<td>트리거 프레임</td>
+<td><code>maxsize=10</code></td>
+</tr>
+<tr>
+<td>Abnormal Model</td>
+<td><code>str</code></td>
+<td>ONNX 결함 검출 모델</td>
+<td><code>abnormal_model.onnx</code></td>
+</tr>
+<tr>
+<td>Score Thresholds</td>
+<td><code>list[float]</code></td>
+<td>결함별 점수 임계값</td>
+<td><code>[0.3, 0.3, 0.3]</code> (약용접, 소착1, 소착2)</td>
+</tr>
+<tr>
+<td>Size Thresholds</td>
+<td><code>list[int]</code></td>
+<td>결함별 크기 임계값 (px²)</td>
+<td><code>[500, 500, 500]</code></td>
+</tr>
+<tr>
+<td><strong>PROCESSING</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Detection</td>
+<td><code>DetectionResultDTO</code></td>
+<td>결함 검출 결과</td>
+<td><code>boxes, labels, scores, masks</code></td>
+</tr>
+<tr>
+<td>Filtering</td>
+<td><code>list[bool]</code></td>
+<td>임계값 통과 여부</td>
+<td><code>score &gt;= threshold AND size &gt;= threshold</code></td>
+</tr>
+<tr>
+<td>Tracking</td>
+<td><code>AbnormalTracker</code></td>
+<td>결함 추적</td>
+<td><code>track_id, defect_type, state</code></td>
+</tr>
+<tr>
+<td>Alarm Calculation</td>
+<td><code>int</code></td>
+<td>알람 코드 계산</td>
+<td><code>결함 타입별 매핑</code></td>
+</tr>
+<tr>
+<td><strong>OUTPUT</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Control Queue</td>
+<td><code>Queue[int]</code></td>
+<td>PLC 알람 값</td>
+<td><code>0(정상) or 1~N(불량)</code></td>
+</tr>
+<tr>
+<td>Event Queue</td>
+<td><code>Queue[dict]</code></td>
+<td>저장 이벤트</td>
+<td><code>{"type":"detect", "data":...}</code></td>
+</tr>
+<tr>
+<td>Marked Image</td>
+<td><code>np.ndarray</code></td>
+<td>결함 마킹 이미지</td>
+<td><code>bbox + mask overlay</code></td>
+</tr>
+<tr>
+<td>Detection Log</td>
+<td><code>.log</code> 파일</td>
+<td>텍스트 로그</td>
+<td>한 줄씩 추가</td>
+</tr>
+<tr>
+<td>Detection CSV</td>
+<td><code>.csv</code> 파일</td>
+<td>구조화된 데이터</td>
+<td>CSV 형식</td>
+</tr>
+</tbody>
+</table>
+<p><strong>DetectionResultDTO 구조:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DetectionResultDTO</span>:</span>
+    boxes: np.ndarray      <span class="hljs-comment"># [N, 4] (x1, y1, x2, y2)</span>
+    labels: np.ndarray     <span class="hljs-comment"># [N] 클래스 인덱스</span>
+    scores: np.ndarray     <span class="hljs-comment"># [N] 신뢰도 점수</span>
+    masks: np.ndarray      <span class="hljs-comment"># [N, H, W] 세그멘테이션 마스크</span>
+</div></code></pre>
+<p><strong>알람 값 매핑:</strong></p>
+<table>
+<thead>
+<tr>
+<th>결함 타입</th>
+<th>Label</th>
+<th>Alarm Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>정상 (OK)</td>
+<td>-</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td>불량 (NG)</td>
+<td>0/1/2 (약용접/소착1/소착2)</td>
+<td><code>1</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note</strong>: 실제 PLC로 전송되는 알람 값은 <strong>0 (정상) 또는 1 (불량)</strong> 만 사용합니다.<br>
+결함 타입(약용접, 소착1, 소착2)은 내부 로그 및 이미지 저장용으로만 구분됩니다.</p>
+</blockquote>
+<p><strong>CSV 파일 구조 (실제 코드 기준):</strong></p>
+<pre class="hljs"><code><div>time,local_name,cell_id,detect_time,postproc_time,pred_labels,pred_scores,pred_sizes,decisions,final_decision,path,is_shift,shift_cnt,x_shift,y_shift,angle,horn_x1,anvil_x1,anvil_y1,anvil_area,length
+2026-01-02 14:30:25,LINE01,CELL_001,45.2ms,5.1ms,"['약용접']","[0.85]","[1200]","['abnormal']",abnormal,/path/to/image.jpg,False,0,"None","None","None","None","None","None","None","None"
+</div></code></pre>
+<p><strong>Log 파일 형식 (실제 코드 기준):</strong></p>
+<pre class="hljs"><code><div>[2026-01-02 14:30:25]: LINE01,CELL_001,45.2ms,5.1ms,['약용접'],[0.85],[1200],['abnormal'],abnormal,/path/to/image.jpg,False,0,{'x_shift': None, 'y_shift': None}
+</div></code></pre>
+<p><strong>판정 결과 로그 구조:</strong></p>
+<table>
+<thead>
+<tr>
+<th>필드</th>
+<th>설명</th>
+<th>예시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>time</code></td>
+<td>검출 시각</td>
+<td><code>2026-01-02 14:30:25</code></td>
+</tr>
+<tr>
+<td><code>local_name</code></td>
+<td>라인 이름</td>
+<td><code>LINE01</code></td>
+</tr>
+<tr>
+<td><code>cell_id</code></td>
+<td>Cell ID</td>
+<td><code>CELL_001</code></td>
+</tr>
+<tr>
+<td><code>detect_time</code></td>
+<td>검출 처리 시간</td>
+<td><code>45.2ms</code></td>
+</tr>
+<tr>
+<td><code>postproc_time</code></td>
+<td>후처리 시간</td>
+<td><code>5.1ms</code></td>
+</tr>
+<tr>
+<td><code>pred_labels</code></td>
+<td>검출된 결함 타입</td>
+<td><code>['약용접', '소착1']</code></td>
+</tr>
+<tr>
+<td><code>pred_scores</code></td>
+<td>신뢰도 점수</td>
+<td><code>[0.85, 0.72]</code></td>
+</tr>
+<tr>
+<td><code>pred_sizes</code></td>
+<td>결함 크기 (px²)</td>
+<td><code>[1200, 850]</code></td>
+</tr>
+<tr>
+<td><code>decisions</code></td>
+<td>개별 판정</td>
+<td><code>['abnormal', 'questionable']</code></td>
+</tr>
+<tr>
+<td><code>final_decision</code></td>
+<td>최종 판정</td>
+<td><code>abnormal</code> (정상/의심/불량)</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>이미지 경로</td>
+<td><code>/storage/260102/detect_...jpg</code></td>
+</tr>
+<tr>
+<td><code>is_shift</code></td>
+<td>카메라 이동 여부</td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>shift_cnt</code></td>
+<td>연속 이동 횟수</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>shift_log</code></td>
+<td>이동 상세 정보</td>
+<td><code>{'x_shift': None, ...}</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="54-plc-task">5.4 PLC Task</h3>
+<blockquote>
+<p><strong>핵심 역할</strong>: <strong>PLC와의 양방향 통신</strong>을 담당하는 태스크.</p>
+<ul>
+<li><strong>읽기</strong>: Cell ID, Pallete 번호, Busy 상태를 주기적으로 읽어 다른 Task에 제공</li>
+<li><strong>쓰기</strong>: Abnormal Task로부터 받은 Alarm 값을 PLC에 전송, Heartbeat로 연결 상태 유지</li>
+<li>통신 장애 시 자동 재연결을 시도하며, 모든 통신 이력을 로그 파일로 기록합니다.</li>
+</ul>
+</blockquote>
+<pre><code class="language-mermaid"><div class="mermaid">%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px'}, 'flowchart':{'nodeSpacing':25, 'rankSpacing':35}}}%%
+graph TB
+    START([Start PLC Task])
+    CONNECT[Connect to PLC]
+    LOOP_START{PLC Connected?}
+    
+    subgraph "Main Loop (100-150ms)"
+        READ_CELL[Read Cell ID<br>DB246.DBB82]
+        WAIT1[Wait 50ms]
+        READ_PAL[Read Pallete Num<br>DB246.DBW52]
+        PUT_CELL[Put to Cell ID Queue]
+        PUT_PAL[Put to Pallete Queue]
+        CHECK_CTRL{Control Queue<br>Has Data?}
+        GET_ALARM[Get Alarm Value]
+        WRITE_ALARM[Write Alarm<br>DB246.DBW60]
+    end
+    
+    subgraph "Heartbeat (2초 주기)"
+        TOGGLE[Toggle Heartbeat 0↔1]
+        WRITE_HB[Write Heartbeat<br>DB246.DBW58]
+    end
+    
+    subgraph "Machine Status (2초 주기)"
+        READ_BUSY[Read Busy Status<br>DB246.DBW50]
+        UPDATE_STATUS[Update Machine Status<br>0:정지, 1 or 2:동작]
+    end
+    
+    START --&gt; CONNECT
+    CONNECT --&gt; LOOP_START
+    LOOP_START --&gt;|Yes| READ_CELL
+    LOOP_START --&gt;|No| CONNECT
+    READ_CELL --&gt; WAIT1
+    WAIT1 --&gt; READ_PAL
+    READ_PAL --&gt; PUT_CELL
+    PUT_CELL --&gt; PUT_PAL
+    PUT_PAL --&gt; CHECK_CTRL
+    CHECK_CTRL --&gt;|Yes| GET_ALARM
+    CHECK_CTRL --&gt;|No| READ_CELL
+    GET_ALARM --&gt; WRITE_ALARM
+    WRITE_ALARM --&gt; READ_CELL
+    
+    TOGGLE --&gt; WRITE_HB
+    READ_BUSY --&gt; UPDATE_STATUS
+
+    style READ_CELL fill:#e6f3ff
+    style READ_PAL fill:#e6f3ff
+    style READ_BUSY fill:#e6f3ff
+    style WRITE_ALARM fill:#ffe6e6
+    style WRITE_HB fill:#e6ffe6
+    style UPDATE_STATUS fill:#fff3e6
+</div></code></pre>
+<blockquote>
+<p><strong>Heartbeat와 Machine Status 구분:</strong></p>
+<ul>
+<li><strong>Heartbeat</strong> (쓰기): IVS → PLC로 생존 신호 전송 (0↔1 토글, 2초 주기)</li>
+<li><strong>Machine Status</strong> (읽기): PLC → IVS로 설비 동작 상태 확인 (Busy 값 읽기, 2초 주기)</li>
+</ul>
+</blockquote>
+<h4 id="plc-task-inputoutput">PLC Task Input/Output</h4>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>타입</th>
+<th>설명</th>
+<th>PLC 주소 (Siemens)</th>
+<th>크기</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>INPUT (PLC → IVS)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Cell ID</td>
+<td><code>STRING</code></td>
+<td>생산 셀 식별자</td>
+<td><code>DB246.DBB82</code></td>
+<td>15 bytes</td>
+</tr>
+<tr>
+<td>Pallete Number</td>
+<td><code>INT</code></td>
+<td>팔레트 번호</td>
+<td><code>DB246.DBW52</code></td>
+<td>2 bytes</td>
+</tr>
+<tr>
+<td>Busy Status</td>
+<td><code>INT</code></td>
+<td>설비 가동 상태 (0:Idle, 1 or 2:Active)</td>
+<td><code>DB246.DBW50</code></td>
+<td>2 bytes</td>
+</tr>
+<tr>
+<td><strong>OUTPUT (IVS → PLC)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Alarm Value</td>
+<td><code>INT</code></td>
+<td>결함 알람 코드 (0:정상, 1:불량)</td>
+<td><code>DB246.DBW60</code></td>
+<td>2 bytes</td>
+</tr>
+<tr>
+<td>Heartbeat</td>
+<td><code>INT</code></td>
+<td>생존 신호 (0↔1 토글)</td>
+<td><code>DB246.DBW58</code></td>
+<td>2 bytes</td>
+</tr>
+<tr>
+<td><strong>OUTPUT (로그 파일)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>plc.log</td>
+<td><code>.log</code></td>
+<td>PLC 연결 상태 로그</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>busy.log</td>
+<td><code>.log</code></td>
+<td>Busy 상태 변화 로그</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>heartbeat.log</td>
+<td><code>.log</code></td>
+<td>Heartbeat 송신 로그</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>cell_id.log</td>
+<td><code>.log</code></td>
+<td>Cell ID 읽기 로그</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>pallete_num.log</td>
+<td><code>.log</code></td>
+<td>Pallete 번호 읽기 로그</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>control.log</td>
+<td><code>.log</code></td>
+<td>알람 제어 로그</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>INTERNAL QUEUES</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Control Queue</td>
+<td><code>Queue[int]</code></td>
+<td>Abnormal Task로부터 받은 알람</td>
+<td><code>maxsize=5</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td>Cell ID Queue</td>
+<td><code>Queue[str]</code></td>
+<td>Trigger Task로 전달할 Cell ID</td>
+<td><code>maxsize=1</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td>Pallete Queue</td>
+<td><code>Queue[int]</code></td>
+<td>Trigger Task로 전달할 Pallete</td>
+<td><code>maxsize=1</code></td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>타이밍 요구사항:</strong></p>
+<table>
+<thead>
+<tr>
+<th>작업</th>
+<th>주기</th>
+<th>목적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cell ID 읽기</td>
+<td>100-150ms</td>
+<td>실시간 셀 정보 동기화</td>
+</tr>
+<tr>
+<td>Heartbeat 송신</td>
+<td>2000ms</td>
+<td>PLC와 연결 상태 확인</td>
+</tr>
+<tr>
+<td>Machine Status 읽기</td>
+<td>2000ms</td>
+<td>설비 동작 상태 확인</td>
+</tr>
+<tr>
+<td>Alarm 송신</td>
+<td>Event-driven</td>
+<td>결함 검출 즉시 전송</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="55-io-task">5.5 IO Task</h3>
+<blockquote>
+<p><strong>핵심 역할</strong>: <strong>비디오 저장</strong> 및 <strong>스토리지 용량 관리</strong>를 담당하는 태스크.</p>
+<ul>
+<li>트리거 전후 10초 분량의 프레임을 버퍼링하여 MP4 비디오로 인코딩/저장</li>
+<li>디스크 용량을 모니터링하여 임계치 초과 시 오래된 폴더부터 자동 삭제 (FIFO)</li>
+</ul>
+<p><strong>⚠️ 주의</strong>: 이미지 저장 및 CSV/Log 기록은 Abnormal Task에서 직접 처리합니다.</p>
+</blockquote>
+<pre><code class="language-mermaid"><div class="mermaid">%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px'}, 'flowchart':{'nodeSpacing':25, 'rankSpacing':35}}}%%
+graph TB
+    START([Start IO Task])
+    
+    subgraph "Video Save Process"
+        GET_EVENT[Get Event from Queue]
+        BUFFER[Add Frame to Stream Buffer]
+        CHECK{Trigger Conditions?}
+        ENCODE[Encode Video Clip<br>Trigger ± 10sec]
+        SAVE_VIDEO[Save MP4 File]
+        NOTIFY[Notify Dashboard]
+    end
+    
+    subgraph "Storage Management"
+        MONITOR[Monitor Disk Usage<br>Every 60s]
+        CHECK_SPACE{Space &gt; Limit?}
+        DELETE_OLD[Delete Oldest Directory<br>FIFO Order]
+        LOG_CLEAN[Log Cleanup Event]
+    end
+    
+    START --&gt; GET_EVENT
+    GET_EVENT --&gt; BUFFER
+    BUFFER --&gt; CHECK
+    CHECK --&gt;|No| GET_EVENT
+    CHECK --&gt;|Yes| ENCODE
+    ENCODE --&gt; SAVE_VIDEO
+    SAVE_VIDEO --&gt; NOTIFY
+    NOTIFY --&gt; MONITOR
+    
+    MONITOR --&gt; CHECK_SPACE
+    CHECK_SPACE --&gt;|Yes| DELETE_OLD
+    CHECK_SPACE --&gt;|No| GET_EVENT
+    DELETE_OLD --&gt; LOG_CLEAN
+    LOG_CLEAN --&gt; GET_EVENT
+
+    style ENCODE fill:#e6f3ff
+    style SAVE_VIDEO fill:#e6f3ff
+    style DELETE_OLD fill:#ffe6e6
+</div></code></pre>
+<h4 id="io-task-inputoutput">IO Task Input/Output</h4>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>타입</th>
+<th>설명</th>
+<th>형식</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>INPUT</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Event Queue</td>
+<td><code>Queue[StreamEventDTO]</code></td>
+<td>프레임 + 메타데이터</td>
+<td>Abnormal/Trigger Task에서 송신</td>
+</tr>
+<tr>
+<td>Stream Buffer</td>
+<td><code>deque[np.ndarray]</code></td>
+<td>프레임 누적 버퍼</td>
+<td>최근 10초 프레임</td>
+</tr>
+<tr>
+<td>Watch Seconds</td>
+<td><code>int</code></td>
+<td>버퍼 유지 시간</td>
+<td><code>10초</code> (설정 가능)</td>
+</tr>
+<tr>
+<td>FPS</td>
+<td><code>int</code></td>
+<td>비디오 프레임레이트</td>
+<td><code>25 FPS</code></td>
+</tr>
+<tr>
+<td><strong>PROCESSING</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Video Encoding</td>
+<td><code>cv2.VideoWriter</code></td>
+<td>MP4 인코딩</td>
+<td><code>codec=mp4v, fps=25</code></td>
+</tr>
+<tr>
+<td>Disk Monitoring</td>
+<td><code>psutil.disk_usage()</code></td>
+<td>디스크 사용률 체크</td>
+<td>60초마다</td>
+</tr>
+<tr>
+<td><strong>OUTPUT</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Video Clip</td>
+<td><code>.mp4</code></td>
+<td>트리거 전후 영상</td>
+<td><code>video_YYMMDD_HHMMSS.mp4</code></td>
+</tr>
+<tr>
+<td>Dashboard Event</td>
+<td><code>DetectHistoryVideoDTO</code></td>
+<td>UI 업데이트 (선택)</td>
+<td>Dashboard Queue로 전송</td>
+</tr>
+<tr>
+<td><strong>STORAGE MANAGEMENT</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Disk Usage Check</td>
+<td>주기적</td>
+<td>디스크 사용률 모니터링</td>
+<td>60초마다</td>
+</tr>
+<tr>
+<td>Auto Cleanup</td>
+<td>FIFO</td>
+<td>용량 초과 시 자동 삭제</td>
+<td>가장 오래된 폴더부터</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>⚠️ 중요: IO Task는 비디오만 저장합니다.</strong></p>
+<p><strong>다른 로그들은 Abnormal Task에서 직접 처리:</strong></p>
+<ul>
+<li>이미지 저장 (원본 + 마킹)</li>
+<li>CSV 파일 기록 (검출 결과 구조화 데이터)</li>
+<li>Log 파일 기록 (검출 이력 텍스트 로그)</li>
+<li>판정 결과 기록 (정상/의심/불량)</li>
+</ul>
+</blockquote>
+<p><strong>DetectHistoryDTO 구조:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DetectHistoryDTO</span>:</span>
+    time: datetime                   <span class="hljs-comment"># 검출 시각</span>
+    cell_id: str                     <span class="hljs-comment"># Cell ID</span>
+    path: str | <span class="hljs-literal">None</span>                 <span class="hljs-comment"># 마킹 이미지 경로</span>
+    org_path: str | <span class="hljs-literal">None</span>             <span class="hljs-comment"># 원본 이미지 경로</span>
+    mask: str | <span class="hljs-literal">None</span>                 <span class="hljs-comment"># RLE 인코딩된 마스크</span>
+    detects: list[DetectInfoDTO]     <span class="hljs-comment"># 검출 상세</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DetectInfoDTO</span>:</span>
+    defect_type: int                 <span class="hljs-comment"># 0:정상, 1:불량</span>
+    label: int                       <span class="hljs-comment"># 결함 클래스 인덱스</span>
+    label_name: str                  <span class="hljs-comment"># 약용접/소착1/소착2</span>
+    score: float                     <span class="hljs-comment"># 신뢰도 점수</span>
+</div></code></pre>
+<p><strong>Task별 출력 파일 요약:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>출력 파일</th>
+<th>설명</th>
+<th>저장 위치</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Abnormal Task</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><code>detect_*.jpg</code></td>
+<td>결함 마킹 이미지 (cv2.imwrite)</td>
+<td><code>storage/YYMMDD/</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>detect_*_org.jpg</code></td>
+<td>원본 이미지 (cv2.imwrite)</td>
+<td><code>storage/YYMMDD/</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>YYMMDD_LINE01.log</code></td>
+<td>검출 이력 로그 (텍스트)</td>
+<td><code>storage/YYMMDD/</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>YYMMDD_LINE01_000.csv</code></td>
+<td>검출 데이터 (구조화)</td>
+<td><code>storage/YYMMDD/</code></td>
+</tr>
+<tr>
+<td><strong>PLC Task</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><code>plc.log</code></td>
+<td>PLC 연결/에러 로그</td>
+<td><code>storage/</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>busy.log</code></td>
+<td>Busy 상태 변화 로그</td>
+<td><code>storage/</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>heartbeat.log</code></td>
+<td>Heartbeat 송신 로그</td>
+<td><code>storage/</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>cell_id.log</code></td>
+<td>Cell ID 읽기 로그</td>
+<td><code>storage/</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>pallete_num.log</code></td>
+<td>Pallete 번호 읽기 로그</td>
+<td><code>storage/</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>control.log</code></td>
+<td>알람 제어 로그</td>
+<td><code>storage/</code></td>
+</tr>
+<tr>
+<td><strong>IO Task</strong></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td><code>video_*.mp4</code></td>
+<td>트리거 전후 비디오</td>
+<td><code>storage/YYMMDD/</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>저장 폴더 구조:</strong></p>
+<pre class="hljs"><code><div>storage/
+├── YYMMDD/                            [날짜별 폴더]
+│   ├── detect_YYMMDD_HHMMSS.jpg       [Abnormal] 마킹 이미지
+│   ├── detect_YYMMDD_HHMMSS_org.jpg   [Abnormal] 원본 이미지
+│   ├── YYMMDD_LINE01.log              [Abnormal] 텍스트 로그
+│   ├── YYMMDD_LINE01_000.csv          [Abnormal] CSV 데이터
+│   ├── video_YYMMDD_HHMMSS.mp4        [IO Task] 비디오 클립
+│   └── questionable/                  [의심 케이스 별도 폴더]
+│       ├── detect_YYMMDD_HHMMSS.jpg
+│       └── detect_YYMMDD_HHMMSS_org.jpg
+├── plc.log                            [PLC Task] 연결 상태
+├── busy.log                           [PLC Task] Busy 상태
+├── heartbeat.log                      [PLC Task] Heartbeat
+├── cell_id.log                        [PLC Task] Cell ID
+├── pallete_num.log                    [PLC Task] Pallete
+└── control.log                        [PLC Task] 알람 제어
+</div></code></pre>
+<hr>
+<h2 id="6-%EC%A0%84%EC%B2%B4-inputoutput-%EB%A7%A4%ED%8A%B8%EB%A6%AD%EC%8A%A4">6. 전체 Input/Output 매트릭스</h2>
+<pre><code class="language-mermaid"><div class="mermaid">%%{init: {'theme':'base', 'themeVariables': {'fontSize':'12px'}, 'flowchart':{'nodeSpacing':30, 'rankSpacing':50}}}%%
+graph LR
+    subgraph "External Inputs"
+        I1[Camera Stream]
+        I2[Trigger Model ONNX]
+        I3[Abnormal Model ONNX]
+        I4[Reference Image]
+        I5[ROI Config]
+        I6[Thresholds Config]
+        I7[PLC Cell ID]
+        I8[PLC Pallete]
+        I9[PLC Busy Status]
+    end
+
+    subgraph "IVS System"
+        SYS[IVS Core<br>Multi-Process Pipeline]
+    end
+
+    subgraph "External Outputs"
+        O1[PLC Alarm]
+        O2[PLC Heartbeat]
+        O3[Detection Images]
+        O4[Video Clips]
+        O5[CSV Files]
+        O6[Log Files]
+    end
+
+    I1 --&gt; SYS
+    I2 --&gt; SYS
+    I3 --&gt; SYS
+    I4 --&gt; SYS
+    I5 --&gt; SYS
+    I6 --&gt; SYS
+    I7 --&gt; SYS
+    I8 --&gt; SYS
+    I9 --&gt; SYS
+
+    SYS --&gt; O1
+    SYS --&gt; O2
+    SYS --&gt; O3
+    SYS --&gt; O4
+    SYS --&gt; O5
+    SYS --&gt; O6
+
+    style I1 fill:#e1f5ff
+    style I2 fill:#e1f5ff
+    style I3 fill:#e1f5ff
+    style I4 fill:#e1f5ff
+    style I5 fill:#e1f5ff
+    style I6 fill:#e1f5ff
+    style I7 fill:#fff5e1
+    style I8 fill:#fff5e1
+    style I9 fill:#fff5e1
+    style O1 fill:#ffe1e1
+    style O2 fill:#ffe1e1
+    style O3 fill:#e1ffe1
+    style O4 fill:#e1ffe1
+    style O5 fill:#e1ffe1
+    style O6 fill:#e1ffe1
+</div></code></pre>
+<h3 id="%EC%A0%84%EC%B2%B4-inputoutput-%EC%83%81%EC%84%B8-%ED%85%8C%EC%9D%B4%EB%B8%94">전체 Input/Output 상세 테이블</h3>
+<table>
+<thead>
+<tr>
+<th>분류</th>
+<th>항목</th>
+<th>타입</th>
+<th>형식/예시</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>입력 (모델)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>트리거 모델</td>
+<td>ONNX</td>
+<td><code>trigger_model.onnx</code></td>
+<td>객체 검출</td>
+</tr>
+<tr>
+<td></td>
+<td>결함 모델</td>
+<td>ONNX</td>
+<td><code>abnormal_model.onnx</code></td>
+<td>결함 검출</td>
+</tr>
+<tr>
+<td></td>
+<td>참조 이미지</td>
+<td>Image</td>
+<td><code>reference.jpg</code></td>
+<td>카메라 정위치 기준</td>
+</tr>
+<tr>
+<td><strong>입력 (설정)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>ROI 설정</td>
+<td>JSON</td>
+<td><code>[{"type":"box", "data":[[x,y]]}]</code></td>
+<td>검출 영역</td>
+</tr>
+<tr>
+<td></td>
+<td>점수 임계값</td>
+<td>List</td>
+<td><code>[0.3, 0.3, 0.3]</code></td>
+<td>결함별 최소 점수</td>
+</tr>
+<tr>
+<td></td>
+<td>크기 임계값</td>
+<td>List</td>
+<td><code>[500, 500, 500]</code></td>
+<td>결함별 최소 크기(px²)</td>
+</tr>
+<tr>
+<td><strong>입력 (PLC)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Cell ID</td>
+<td>STRING[15]</td>
+<td><code>"CELL_001"</code></td>
+<td>생산 셀 식별</td>
+</tr>
+<tr>
+<td></td>
+<td>Pallete Number</td>
+<td>INT</td>
+<td><code>52</code></td>
+<td>팔레트 번호</td>
+</tr>
+<tr>
+<td></td>
+<td>Busy Status</td>
+<td>INT</td>
+<td><code>0</code> (Idle), <code>1 or 2</code> (Active)</td>
+<td>가동 상태</td>
+</tr>
+<tr>
+<td><strong>출력 (PLC)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Alarm Value</td>
+<td>INT</td>
+<td><code>0</code> (정상), <code>1</code> (불량)</td>
+<td>결함 알람 코드</td>
+</tr>
+<tr>
+<td></td>
+<td>Heartbeat</td>
+<td>INT</td>
+<td><code>0/1</code></td>
+<td>생존 신호 (2초 토글)</td>
+</tr>
+<tr>
+<td><strong>출력 (파일 - Abnormal Task)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>마킹 이미지</td>
+<td>JPEG</td>
+<td><code>detect_YYMMDD_HHMMSS.jpg</code></td>
+<td>결함 표시 이미지</td>
+</tr>
+<tr>
+<td></td>
+<td>원본 이미지</td>
+<td>JPEG</td>
+<td><code>detect_YYMMDD_HHMMSS_org.jpg</code></td>
+<td>원본 프레임</td>
+</tr>
+<tr>
+<td></td>
+<td>CSV 데이터</td>
+<td>CSV</td>
+<td><code>YYMMDD_LINE01_000.csv</code></td>
+<td>구조화된 검출 데이터</td>
+</tr>
+<tr>
+<td></td>
+<td>판정 로그</td>
+<td>TXT</td>
+<td><code>YYMMDD_LINE01.log</code></td>
+<td>검출 이력</td>
+</tr>
+<tr>
+<td><strong>출력 (파일 - PLC Task)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>통신 로그</td>
+<td>TXT</td>
+<td><code>plc.log</code>, <code>busy.log</code> 등</td>
+<td>PLC 통신 이력 (6개 파일)</td>
+</tr>
+<tr>
+<td><strong>출력 (파일 - IO Task)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>비디오 클립</td>
+<td>MP4</td>
+<td><code>video_YYMMDD_HHMMSS.mp4</code></td>
+<td>트리거 전후 영상 (±10초)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+
+
+
+</body></html>

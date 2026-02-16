@@ -1,0 +1,85 @@
+<Window x:Class="InferenceClientUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="RTM x LG ENS"
+        Width="1200" Height="800"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        Background="{DynamicResource SidebarBg}"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True">
+
+    <!-- ✅ Win11 상단 1~2px Non-Client 잔상 제거 -->
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome
+            CaptionHeight="0"
+            CornerRadius="0"
+            GlassFrameThickness="0"
+            ResizeBorderThickness="6"
+            UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="44"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ===================== Custom TitleBar ===================== -->
+        <Border Grid.Row="0"
+                Background="{DynamicResource SidebarBg}"
+                BorderBrush="{DynamicResource LineSoft}"
+                BorderThickness="0,0,0,1"
+                SnapsToDevicePixels="True"
+                UseLayoutRounding="True"
+                RenderOptions.EdgeMode="Aliased">
+            <!-- ✅ 이 영역을 드래그 가능 영역으로 지정 -->
+            <Grid x:Name="TitleBar"
+                  MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Margin="12,0,0,0">
+                    <TextBlock Text="LG ENERGY SOLUTIONS"
+                               Foreground="{DynamicResource TextPrimary}"
+                               FontWeight="SemiBold"
+                               FontSize="13"/>
+                </StackPanel>
+
+                <Border Grid.Column="1" Background="Transparent"/>
+
+                <StackPanel Grid.Column="2"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <Button x:Name="MinBtn" Content="—" Click="MinBtn_Click"
+                            Width="46" Height="44" FontSize="14"
+                            Background="Transparent" BorderThickness="0"
+                            Foreground="{DynamicResource TextPrimary}"
+                            Cursor="Hand"/>
+                    <Button x:Name="MaxBtn" Content="▢" Click="MaxBtn_Click"
+                            Width="46" Height="44" FontSize="13"
+                            Background="Transparent" BorderThickness="0"
+                            Foreground="{DynamicResource TextPrimary}"
+                            Cursor="Hand"/>
+                    <Button x:Name="CloseBtn" Content="✕" Click="CloseBtn_Click"
+                            Width="46" Height="44" FontSize="13"
+                            Background="Transparent" BorderThickness="0"
+                            Foreground="{DynamicResource TextPrimary}"
+                            Cursor="Hand"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ===================== App Content ===================== -->
+        <Border Grid.Row="1" Background="{DynamicResource AppBg}">
+            <ContentControl Content="{Binding}" />
+        </Border>
+    </Grid>
+</Window>

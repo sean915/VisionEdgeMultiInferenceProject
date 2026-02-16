@@ -1,0 +1,428 @@
+#include "Detector.h"
+#include "Include/Data/DetectOutputDto.h"
+#include "Include/Data/ResultItemC.h"
+#include <chrono>
+#include <vector>
+//#include <onnxruntime_cxx_api.h>
+#include <opencv2/imgproc.hpp>
+
+
+namespace HMSTACK 
+{
+
+    Detector::Detector(const AlgorithmConfig& config)
+        : config_(config) 
+    {
+    }
+
+    Detector::~Detector() {
+        running_ = false;
+        if (worker_.joinable())
+            worker_.join();
+    }
+
+    void Detector::addResultListener(std::shared_ptr<IResultListener> listener) {
+        result_listener_ = listener;
+    }
+
+    void Detector::setCResultCallback(CResultCallback cb) {
+        c_callback_ = cb;
+    }
+
+
+    void Detector::model_setup() {
+        status_ = AlgorithmStatus::INITIALIZING;
+
+        // TODO: 경로는 config_에서 받아야 함
+        trigger_sess_ = std::make_unique<OrtSessionWrap>(L"C:/Users/aipc1/Desktop/stackmagazine/Trigger_Cathode_V1.0.0_best.onnx", /*useCuda*/true);
+        defect_sess_ = std::make_unique<OrtSessionWrap>(L"C:/Users/aipc1/Desktop/stackmagazine/Classifier_Anode_V1.0.0_best.onnx",  /*useCuda*/true);
+
+        // TODO: session input shape에서 (H,W) 읽어서 trig_in_w_/h_ 설정 권장
+        // TODO: output 이름 확인해서 파서에 반영
+        
+        running_ = true;
+        trigger_worker_ = std::thread(&Detector::triggerLoop, this);
+        defect_worker_ = std::thread(&Detector::defectLoop, this);
+
+        status_ = AlgorithmStatus::READY;
+    }
+
+
+    int Detector::pushFrame(const FrameData& frame) {
+        if (status_ != AlgorithmStatus::READY && status_ != AlgorithmStatus::RUNNING)
+            return -1;
+
+        // ⚠️ 가정: 입력은 BGR 8UC3, 연속 메모리
+        // 실제 포맷이 다르면 여기에서 cvType/stride/bytesPerPixel을 맞춰야 함.
+        const int cvType = CV_8UC3;
+        const int bytesPerPixel = 3;
+        const int stride = frame.width * bytesPerPixel;
+        const size_t totalBytes = static_cast<size_t>(stride) * static_cast<size_t>(frame.height);
+
+        OwnedFrame of;
+        of.index = frame.index;
+        of.width = frame.width;
+        of.height = frame.height;
+        of.cvType = cvType;
+        of.strideBytes = stride;
+        of.timestamp = frame.timestamp;
+        of.buf.resize(totalBytes);
+
+        // frame.data는 호출자 메모리. 여기서 즉시 복사해서 DLL이 소유하도록!
+        if (!frame.data || frame.width <= 0 || frame.height <= 0) return -1;
+        std::memcpy(of.buf.data(), frame.data, totalBytes);
+
+        frame_queue_owned_.push(std::move(of));
+        return 0;
+    }
+
+
+    //void Detector::inferenceLoop() {
+    //    status_ = AlgorithmStatus::RUNNING;
+
+    //    while (running_) {
+    //        OwnedFrame of;
+    //        if (!frame_queue_owned_.pop(of)) {
+    //            continue;
+    //        }
+
+    //        auto start = std::chrono::steady_clock::now();
+
+    //        // 입력 Mat 복원 (OwnedFrame이 buf 소유)
+    //        cv::Mat input(of.height, of.width, of.cvType, of.buf.data(), of.strideBytes);
+
+    //        // =========================
+    //        // 여기서 실제 추론 수행 (Triton/ONNX/TensorRT 등)
+    //        // 결과는 output.results(혹은 내부 결과)로 만든다
+    //        // =========================
+    //        DetectOutputDto output;
+    //        output.error_code = (int)ErrorCodeEnum::NO_ERROR;
+
+    //        // --- (예시) 시각화 이미지: 입력을 복사해서 위에 그린다 ---
+    //        cv::Mat vis = input.clone();
+
+    //        // TODO: output.results에 채워진 결과를 기반으로 박스/마스크 등을 vis에 draw
+    //        // ex) for (...) cv::rectangle(vis, ...)
+
+    //        auto end = std::chrono::steady_clock::now();
+    //        output.takt_time = static_cast<uint32_t>(
+    //            std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+    //            );
+
+    //        // =========================
+    //        // 콜백 호출 (Ex 우선)
+    //        // =========================
+    //        if (c_callback_) {
+    //            // ResultItemC 배열 구성(기존 코드 유지)
+    //            std::vector<ResultItemC> c_results;
+    //            c_results.reserve(output.results.size());
+    //            for (const auto& r : output.results) {
+    //                ResultItemC cr{};
+    //                cr.defect_type = (int)r.defect_type;
+    //                cr.score = r.score;
+    //                cr.box = { (int)r.box.x1, (int)r.box.y1, (int)r.box.x2, (int)r.box.y2 };
+    //                c_results.push_back(cr);
+    //            }
+
+    //            c_callback_(
+    //                of.index,
+    //                (int)c_results.size(),
+    //                c_results.data(),
+    //                (int)output.error_code,
+    //                output.error_msg.c_str(),
+    //                vis.data,
+    //                vis.cols,
+    //                vis.rows,
+    //                (int)vis.step,
+    //                vis.type()
+    //            );
+    //        }
+    //    
+    //    }
+    //}
+
+    // Detector.cpp 상단 또는 적절한 위치에 evaluate_trigger_cpp 함수 정의 추가
+
+
+    // 기존 코드에서
+    /*static TriggerResult evaluate_trigger_cpp(
+        bool has_cell, const cv::Rect& best_cell, float best_cell_score,
+        bool has_pnp, const cv::Rect& best_pnp, float best_pnp_score,
+        float cell_min_score, float pnp_min_score)
+    {
+        TriggerResult result;
+        if (has_cell && best_cell_score >= cell_min_score) {
+            result.ok = true;
+            result.cell = best_cell;
+            result.cell_score = best_cell_score;
+            if (has_pnp && best_pnp_score >= pnp_min_score) {
+                result.pnp = best_pnp;
+                result.pnp_score = best_pnp_score;
+            }
+        }
+        return result;
+    }*/
+
+    static cv::Mat make_crop_cpp(const cv::Mat& frame_bgr,
+        HMSTACK::Detector::CropMode mode,
+        const cv::Rect& cell,
+        const cv::Rect& pnp,
+        int padding)
+    {
+        int w = frame_bgr.cols, h = frame_bgr.rows;
+        auto clampRect = [&](cv::Rect r) {
+            int x1 = std::max(0, r.x - padding);
+            int y1 = std::max(0, r.y - padding);
+            int x2 = std::min(w, r.x + r.width + padding);
+            int y2 = std::min(h, r.y + r.height + padding);
+            if (x2 <= x1) x2 = std::min(w, x1 + 1);
+            if (y2 <= y1) y2 = std::min(h, y1 + 1);
+            return cv::Rect(x1, y1, x2 - x1, y2 - y1);
+            };
+
+        if (mode == HMSTACK::Detector::CropMode::FULL) return frame_bgr.clone();
+        if (mode == HMSTACK::Detector::CropMode::PNP)  return frame_bgr(clampRect(pnp)).clone();
+        return frame_bgr(clampRect(cell)).clone(); // default CELL
+    }
+
+    void Detector::defectLoop() {
+        std::vector<uint16_t> fp16buf;
+        std::vector<float>    fp32buf;
+
+        while (running_) {
+            DefectJob job;
+            if (!defect_queue_.pop(job)) continue;
+
+            auto start = std::chrono::steady_clock::now();
+
+            // (선택) 분류 모델이 RGB를 요구하면 변환
+            cv::Mat crop = job.crop_bgr; // BGR
+            // TODO: 필요시 cv::cvtColor(crop, crop, cv::COLOR_BGR2RGB);
+
+            // letterbox or resize: 분류 모델 전처리 규칙에 맞춰야 함
+            // 파이썬은 YOLO classify가 내부 처리하지만, ONNX라면 명시해야 함.
+            HMSTACK::LetterboxInfo lb;
+            cv::Mat inp = crop; // letterbox_bgr(crop, defect_in_w_, defect_in_h_, lb); // 또는 keep_aspect 없이 resize
+
+//            cv::Mat inp = letterbox_bgr(crop, defect_in_w_, defect_in_h_, lb); // 또는 keep_aspect 없이 resize
+
+            // ORT input
+            auto inNames = defect_sess_->inputNames();
+            auto outNames = defect_sess_->outputNames();
+            
+            // Ort::Value 생성 시 std::move 사용
+            //auto inTensor = make_blob_nchw(inp, defect_sess_->memInfo(), ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT, fp16buf, fp32buf);
+
+            //// run 호출 시에도 move 사용
+            //std::vector<Ort::Value> inVals;
+            //inVals.push_back(std::move(inTensor));
+            //
+            //auto outs = defect_sess_->run(inNames, std::move(inVals), outNames);
+
+            // -----------------------------
+            // TODO(중요): outs에서 probs(abnormal/normal/empty) 파싱
+            // - softmax가 모델에 포함인지 여부도 확인 필요
+            // -----------------------------
+            float p_ab = 0.f, p_no = 0.f, p_em = 0.f;
+            //parse_class_probs_or_throw(outs, outNames, /*out*/p_ab, p_no, p_em);
+
+           // auto dec = evaluate_defect_cpp(p_ab, p_no, p_em, sure_, min_valid_);
+
+            // 시각화
+            cv::Mat vis = job.frame_bgr.clone();
+            // trigger bbox 표시
+            cv::rectangle(vis, job.trig.cell, cv::Scalar(0, 255, 0), 2);
+            cv::rectangle(vis, job.trig.pnp, cv::Scalar(255, 0, 0), 2);
+            // 최종 텍스트
+            //cv::putText(vis, dec.final + " " + dec.top1 + ":" + std::to_string(dec.top1_score),
+              //  cv::Point(20, 40), cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(0, 255, 255), 2);
+
+            DetectOutputDto output;
+//            output.error_code = (dec.final == "Error") ? 1 : 0;
+            output.error_code = 1;
+             
+            output.error_msg = "test";//dec.reason;
+            output.takt_time = (uint32_t)std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::steady_clock::now() - start
+            ).count();
+
+            // 결과 1개를 DTO에 넣기(정책)
+            auto dr = std::make_unique<DetectResultDto>();
+            // box는 보통 cell box를 대표로 사용(정책). 원하면 pnp/cell 둘 다 push도 가능
+            dr->box.x1 = job.trig.cell.x;
+            dr->box.y1 = job.trig.cell.y;
+            dr->box.x2 = job.trig.cell.x + job.trig.cell.width;
+            dr->box.y2 = job.trig.cell.y + job.trig.cell.height;
+
+            // label 매핑(정책 필요): 예시
+            // Abnormal=0, Normal=1, Questionable=2
+            /*if (dec.final == "Abnormal")      dr->label = 0;
+            else if (dec.final == "Normal")  dr->label = 1;
+            else if (dec.final == "Questionable") dr->label = 2;
+            else dr->label = -1*/;
+
+            //dr->score = dec.top1_score;
+            dr->size = job.trig.cell.area();
+
+         /*   if (dec.final == "Abnormal") output.ab_results.push_back(std::move(dr));
+            else if (dec.final == "Questionable") output.q_results.push_back(std::move(dr));
+            else output.normal_results.push_back(std::move(dr));*/
+
+            // 콜백(B 방식: 이미지 포함)
+            if (c_callback_) {
+                std::vector<ResultItemC> c_results;
+                // TODO: 필요하면 output의 결과를 ResultItemC로도 채우기
+
+                c_callback_(
+                    job.frameIndex,
+                    (int)c_results.size(),
+                    c_results.data(),
+                    output.error_code,
+                    output.error_msg.c_str(),
+                    vis.data, vis.cols, vis.rows, (int)vis.step, vis.type()
+                );
+            }
+        }
+    }
+
+
+    void Detector::triggerLoop() {
+        status_ = AlgorithmStatus::RUNNING;
+
+        std::vector<uint16_t> fp16buf;
+        std::vector<float>    fp32buf;
+
+        while (running_) {
+            OwnedFrame of;
+            if (!frame_queue_owned_.pop(of)) continue;
+
+            cv::Mat raw(of.height, of.width, of.cvType, of.buf.data(), of.strideBytes);
+            cv::Mat frame_bgr = raw.clone();
+
+            // letterbox to trig input
+            HMSTACK::LetterboxInfo lb;
+            
+            cv::Mat inp = frame_bgr; // letterbox_bgr(frame_bgr, trig_in_w_, trig_in_h_, lb);
+
+//            cv::Mat inp = letterbox_bgr(frame_bgr, trig_in_w_, trig_in_h_, lb);
+
+            // ORT input tensor
+            auto inNames = trigger_sess_->inputNames();
+            auto outNames = trigger_sess_->outputNames();
+
+            // Ort::Value 생성 시 std::move 사용
+            //auto inTensor = make_blob_nchw(inp, trigger_sess_->memInfo(), ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT, fp16buf, fp32buf);
+
+            //// run 호출 시에도 move 사용
+            //std::vector<Ort::Value> inVals;
+            //inVals.push_back(std::move(inTensor));
+            //
+            //auto outs = trigger_sess_->run(inNames, std::move(inVals), outNames);
+
+            // -----------------------------
+            // TODO(중요): outs에서 boxes/labels/scores/masks 파싱
+            // 아래는 "출력 이름이 boxes/labels/scores"인 경우의 전형적인 형태만 예시로 든다.
+            // 모델이 YOLO 단일 output이면 이 부분은 완전히 다르게 작성해야 함.
+            // -----------------------------
+            bool has_cell = false, has_pnp = false;
+            cv::Rect best_cell, best_pnp;
+            float best_cell_score = 0.f, best_pnp_score = 0.f;
+
+            // 예시: outputNames에 "boxes","labels","scores"가 있다고 가정
+            // 1) boxes float (N,4) in letterbox space
+            // 2) labels int64 (N)
+            // 3) scores float (N)
+
+            // <<< 여기 파싱은 모델별로 확정 필요 >>>
+            //parse_detection_outputs_or_throw(outs, outNames, lb, frame_bgr.cols, frame_bgr.rows,
+            //    /*out*/has_cell, best_cell, best_cell_score,
+            //    /*out*/has_pnp, best_pnp, best_pnp_score);
+
+            //auto trig = evaluate_trigger_cpp(has_cell, best_cell, best_cell_score,
+            //    has_pnp, best_pnp, best_pnp_score,
+            //    cell_min_score_, pnp_min_score_);
+
+            //if (!trig.ok) {
+            //    continue; // trigger 실패면 스킵(정책)
+            //}
+
+            //cv::Mat crop = make_crop_cpp(frame_bgr, crop_mode_, trig.cell, trig.pnp, crop_padding_);
+
+            DefectJob job;
+            job.frameIndex = of.index;
+            job.frame_bgr = std::move(frame_bgr);
+            /*job.crop_bgr = std::move(crop);
+            job.trig.ok = trig.ok;
+            job.trig.cell = trig.cell;
+            job.trig.pnp = trig.pnp;
+            job.trig.cell_score = trig.cell_score;
+            job.trig.pnp_score = trig.pnp_score;
+            job.ts_ms = of.timestamp;*/
+
+            defect_queue_.push(std::move(job));
+        }
+    }
+
+    // letterbox_bgr 함수 정의 추가 (Detector.cpp 상단 또는 적절한 위치에 삽입)
+    /*static cv::Mat letterbox_bgr(const cv::Mat& src, int dst_w, int dst_h, HMSTACK::LetterboxInfo& info)
+    {
+        int src_w = src.cols;
+        int src_h = src.rows;
+        float scale = std::min(dst_w / (float)src_w, dst_h / (float)src_h);
+        int new_w = static_cast<int>(src_w * scale);
+        int new_h = static_cast<int>(src_h * scale);
+
+        int pad_w = dst_w - new_w;
+        int pad_h = dst_h - new_h;
+        int pad_left = pad_w / 2;
+        int pad_right = pad_w - pad_left;
+        int pad_top = pad_h / 2;
+        int pad_bottom = pad_h - pad_top;
+
+        cv::Mat resized;
+        cv::resize(src, resized, cv::Size(new_w, new_h));
+
+        cv::Mat out;
+        cv::copyMakeBorder(resized, out, pad_top, pad_bottom, pad_left, pad_right, cv::BORDER_CONSTANT, cv::Scalar(114, 114, 114));
+
+        info.pad_left = pad_left;
+        info.pad_right = pad_right;
+        info.pad_top = pad_top;
+        info.pad_bottom = pad_bottom;
+        info.scale = scale;
+
+        return out;
+    }*/
+
+   
+
+    static DefectEvalResult evaluate_defect_cpp(float p_ab, float p_no, float p_em, float sure, float min_valid)
+    {
+        DefectEvalResult result;
+        // 가장 높은 확률과 클래스 결정
+        float probs[3] = { p_ab, p_no, p_em };
+        const char* names[3] = { "Abnormal", "Normal", "Empty" };
+        int top1_idx = 0;
+        for (int i = 1; i < 3; ++i) {
+            if (probs[i] > probs[top1_idx]) top1_idx = i;
+        }
+        result.top1 = names[top1_idx];
+        result.top1_score = probs[top1_idx];
+
+        // 정책: 확신(sure) 이상이면 확정, min_valid 이상이면 Questionable, 아니면 Error
+        if (result.top1_score >= sure) {
+            result.final = result.top1;
+            result.reason = "High confidence";
+        }
+        else if (result.top1_score >= min_valid) {
+            result.final = "Questionable";
+            result.reason = "Low confidence";
+        }
+        else {
+            result.final = "Error";
+            result.reason = "Below minimum valid threshold";
+        }
+        return result;
+    }
+
+} // namespace HMSTACK

@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\Include">
+      <UniqueIdentifier>{a1a99b16-f26d-4974-bbc7-30ada73c1150}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Include\Common">
+      <UniqueIdentifier>{ccdc4600-8741-458f-9458-4102f9296d9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Include\Utils">
+      <UniqueIdentifier>{f5fb6546-5ec9-4e55-af34-88ac49b21db4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Include\Ort">
+      <UniqueIdentifier>{b99662b6-af09-478b-9690-0dd023ccbfba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Data">
+      <UniqueIdentifier>{16732743-7963-46a4-ab69-4f7682ab56d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Include\Trt">
+      <UniqueIdentifier>{be51c438-17b1-40f7-bab6-0a3bab097b06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Include\Listeners">
+      <UniqueIdentifier>{10c1a79c-d759-492d-9187-87c36b976e4e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HtkDto.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Data\DetectInputDto.h">
+      <Filter>소스 파일\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Data\DetectOutputDto.h">
+      <Filter>소스 파일\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Data\Frame.h">
+      <Filter>소스 파일\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Data\ResultItem.h">
+      <Filter>소스 파일\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Common\AD_API.h">
+      <Filter>소스 파일\Include\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Common\AlgorithmTypes.h">
+      <Filter>소스 파일\Include\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Listners\IDetector.h">
+      <Filter>소스 파일\Include\Listeners</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utills\ThreadSafeQueue.h">
+      <Filter>소스 파일\Include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Data\PlcInfo.h">
+      <Filter>소스 파일\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Data\ResultItemC.h">
+      <Filter>소스 파일\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Ort\OrtSession.h">
+      <Filter>소스 파일\Include\Ort</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Trt\TrtSession.h">
+      <Filter>소스 파일\Include\Trt</Filter>
+    </ClInclude>
+    <ClInclude Include="DetectorParsers.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DetectorPreprocessing.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DetectorPostprocessing.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DetectorHelpers.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Detector.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AlgorithmModule.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Detector.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Ort\OrtSession.cpp">
+      <Filter>소스 파일\Include\Ort</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Trt\TrtSession.cpp">
+      <Filter>소스 파일\Include\Trt</Filter>
+    </ClCompile>
+    <ClCompile Include="DetectorParsers.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DetectorPreprocessing.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DetectorPostprocessing.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DetectorHelpers.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
+</Project>

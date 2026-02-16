@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<!-- saved from url=(0184)http://blm.lgensol.com/plugins/servlet/jeditor_file_provider?imgId=ckupload202602131807705462584197135&fileName=LGES+IVS+algorithm+DLL%28InputOutput+%EB%AA%85%EC%84%B8%EC%84%9C%29.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>LGES IVS algorithm DLL(InputOutput 명세서).md</title>
+
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="./LGES IVS algorithm DLL(InputOutput 명세서).md_files/mermaid.min.js.다운로드"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="lges-ivs-algorithm-dllinputoutput-%EB%AA%85%EC%84%B8%EC%84%9C">LGES IVS algorithm DLL(Input/Output 명세서)</h1>
+<hr>
+<h2 id="%F0%9F%93%A5-input-%EB%AA%85%EC%84%B8-cns-%E2%86%92-lges-dll">📥 Input 명세 (CNS → LGES DLL)</h2>
+<p><strong>실제 코드 구조</strong>:</p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">DetectInputDto</span> {</span>
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">shared_ptr</span>&lt;Frame&gt; frame;  <span class="hljs-comment">// 프레임 (이미지 + 메타정보)</span>
+    Plc_Info plcInfo;              <span class="hljs-comment">// PLC 정보</span>
+};
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Frame</span> {</span>
+    <span class="hljs-keyword">uint64_t</span> index;                                  <span class="hljs-comment">// 프레임 번호</span>
+    cv::Mat data;                                    <span class="hljs-comment">// 이미지 데이터</span>
+    <span class="hljs-built_in">std</span>::chrono::system_clock::time_point timestamp; <span class="hljs-comment">// 수신 시각</span>
+    <span class="hljs-keyword">int</span> ref_count;                                   <span class="hljs-comment">// 참조 카운트</span>
+};
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Plc_Info</span> {</span>
+    <span class="hljs-keyword">int</span> equip_status;  <span class="hljs-comment">// 설비 상태</span>
+};
+</div></code></pre>
+<h3 id="input-%ED%86%B5%ED%95%A9%ED%91%9C">Input 통합표</h3>
+<table>
+<thead>
+<tr>
+<th>구조</th>
+<th>항목명</th>
+<th>타입</th>
+<th>필수</th>
+<th>제공 주기</th>
+<th>제공 방식</th>
+<th>설명</th>
+<th>예시/제약</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Frame</strong></td>
+<td><code>index</code></td>
+<td><code>uint64_t</code></td>
+<td>✓</td>
+<td>매 프레임</td>
+<td>직접 제공</td>
+<td>프레임 번호 (순차 증가)</td>
+<td>0, 1, 2, 3, ...</td>
+</tr>
+<tr>
+<td></td>
+<td><code>data</code></td>
+<td><code>cv::Mat</code></td>
+<td>✓</td>
+<td>매 프레임</td>
+<td>직접 제공</td>
+<td>BGR 이미지 (CV_8UC3)</td>
+<td>width/height/channels는 Mat 속성</td>
+</tr>
+<tr>
+<td></td>
+<td><code>timestamp</code></td>
+<td><code>chrono::time_point</code></td>
+<td>✓</td>
+<td>매 프레임</td>
+<td>직접 제공</td>
+<td>프레임 수신 시각</td>
+<td>Frame 생성자에서 자동 설정</td>
+</tr>
+<tr>
+<td><strong>Plc_Info</strong></td>
+<td><code>equip_status</code></td>
+<td><code>int</code></td>
+<td>✓</td>
+<td>이벤트성</td>
+<td>직접 제공</td>
+<td>설비 상태</td>
+<td>상태 코드 값</td>
+</tr>
+<tr>
+<td><strong>설정 파일</strong></td>
+<td><code>config</code></td>
+<td><code>json file</code></td>
+<td>✓</td>
+<td>이벤트성</td>
+<td>파일 경로</td>
+<td>전체 시스템 설정</td>
+<td>아래 상세 표 참조<br>(UI상으로 추출 및 json파일로 관리할 상세항목은 논의필요)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="%EC%84%A4%EC%A0%95-%ED%8C%8C%EC%9D%BC-configjson-%EC%83%81%EC%84%B8">설정 파일 (config.json) 상세</h3>
+<p><strong>Algorithm1 설정</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>섹션</th>
+<th>항목명</th>
+<th>타입</th>
+<th>기본값</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>model</strong></td>
+<td><code>type</code></td>
+<td>enum</td>
+<td>TensorRT</td>
+<td>모델 타입</td>
+</tr>
+<tr>
+<td></td>
+<td><code>path</code></td>
+<td>string</td>
+<td>"D:/weights/Algorithm1/251112/best.fp16"</td>
+<td>모델 파일 경로</td>
+</tr>
+<tr>
+<td><strong>inference</strong></td>
+<td><code>nms_threshold</code></td>
+<td>float</td>
+<td>0.1</td>
+<td>NMS threshold</td>
+</tr>
+<tr>
+<td></td>
+<td><code>conf_threshold</code></td>
+<td>float</td>
+<td>0.9</td>
+<td>Confidence threshold</td>
+</tr>
+<tr>
+<td></td>
+<td><code>min_width</code></td>
+<td>int</td>
+<td>409</td>
+<td>최소 검출 너비</td>
+</tr>
+<tr>
+<td></td>
+<td><code>min_height</code></td>
+<td>int</td>
+<td>352</td>
+<td>최소 검출 높이</td>
+</tr>
+<tr>
+<td></td>
+<td><code>aspect_ratio_min</code></td>
+<td>float</td>
+<td>1.110714</td>
+<td>최소 가로세로 비율</td>
+</tr>
+<tr>
+<td></td>
+<td><code>aspect_ratio_max</code></td>
+<td>float</td>
+<td>1.210714</td>
+<td>최대 가로세로 비율</td>
+</tr>
+<tr>
+<td><strong>detection_option</strong></td>
+<td><code>keeping_threshold</code></td>
+<td>int</td>
+<td>15</td>
+<td>키프레임 유지 임계값</td>
+</tr>
+<tr>
+<td></td>
+<td><code>save_frame_num</code></td>
+<td>int</td>
+<td>10</td>
+<td>저장할 프레임 수</td>
+</tr>
+<tr>
+<td></td>
+<td><code>keyframe_save_path</code></td>
+<td>string</td>
+<td>"./kfd_keyframes/"</td>
+<td>키프레임 저장 경로</td>
+</tr>
+<tr>
+<td></td>
+<td><code>debug_save_path</code></td>
+<td>string</td>
+<td>"./kfd_debug_images/"</td>
+<td>디버그 이미지 저장 경로</td>
+</tr>
+<tr>
+<td></td>
+<td><code>save_keyframe</code></td>
+<td>bool</td>
+<td>true</td>
+<td>키프레임 저장 여부</td>
+</tr>
+<tr>
+<td></td>
+<td><code>save_debug_image</code></td>
+<td>bool</td>
+<td>true</td>
+<td>디버그 이미지 저장 여부</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Algorithm2 설정</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>섹션</th>
+<th>항목명</th>
+<th>타입</th>
+<th>기본값</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>model</strong></td>
+<td><code>type</code></td>
+<td>enum</td>
+<td>TensorRT</td>
+<td>모델 타입</td>
+</tr>
+<tr>
+<td></td>
+<td><code>path</code></td>
+<td>string</td>
+<td>"D:/weights/Algorithm2/251120/best.fp16"</td>
+<td>모델 파일 경로</td>
+</tr>
+<tr>
+<td><strong>inference</strong></td>
+<td><code>confThreshold</code></td>
+<td>float</td>
+<td>0.7</td>
+<td>Confidence threshold</td>
+</tr>
+<tr>
+<td></td>
+<td><code>nmsThreshold</code></td>
+<td>float</td>
+<td>0.1</td>
+<td>NMS threshold</td>
+</tr>
+<tr>
+<td><strong>detection_option</strong></td>
+<td><code>threshold_cell_fault</code></td>
+<td>int</td>
+<td>5</td>
+<td>셀 결함 판정 임계값 (10회 중 N회)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>threshold_gap_fault</code></td>
+<td>int</td>
+<td>5</td>
+<td>갭 결함 판정 임계값</td>
+</tr>
+<tr>
+<td></td>
+<td><code>threshold_zig</code></td>
+<td>int</td>
+<td>5</td>
+<td>지그 결함 판정 임계값</td>
+</tr>
+<tr>
+<td></td>
+<td><code>cell_misplacement_threshold</code></td>
+<td>int</td>
+<td>5</td>
+<td>셀 위치 이동 임계값</td>
+</tr>
+<tr>
+<td></td>
+<td><code>cell_misplacement_std_threshold</code></td>
+<td>float</td>
+<td>3.0</td>
+<td>셀 위치 표준편차 임계값</td>
+</tr>
+<tr>
+<td></td>
+<td><code>cell_misplacement_x_threshold</code></td>
+<td>float</td>
+<td>5.0</td>
+<td>셀 X축 이동 임계값</td>
+</tr>
+<tr>
+<td></td>
+<td><code>cell_misplacement_y_threshold</code></td>
+<td>float</td>
+<td>8.0</td>
+<td>셀 Y축 이동 임계값</td>
+</tr>
+<tr>
+<td></td>
+<td><code>result_save_path</code></td>
+<td>string</td>
+<td>"./fd_resultImages/"</td>
+<td>결과 이미지 저장 경로</td>
+</tr>
+<tr>
+<td></td>
+<td><code>debug_save_path</code></td>
+<td>string</td>
+<td>"./fd_faultImages/"</td>
+<td>디버그 이미지 저장 경로</td>
+</tr>
+<tr>
+<td></td>
+<td><code>save_result_image</code></td>
+<td>bool</td>
+<td>true</td>
+<td>결과 이미지 저장 여부</td>
+</tr>
+<tr>
+<td></td>
+<td><code>save_debug_image</code></td>
+<td>bool</td>
+<td>true</td>
+<td>디버그 이미지 저장 여부</td>
+</tr>
+<tr>
+<td><strong>roi_regions</strong></td>
+<td><code>CELL_ROIS</code></td>
+<td>array[18]</td>
+<td>-</td>
+<td>셀 ROI 좌표 (18개)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>GAP_ROIS</code></td>
+<td>array[36]</td>
+<td>-</td>
+<td>갭 ROI 좌표 (36개)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>ZIG_ROIS</code></td>
+<td>array[16]</td>
+<td>-</td>
+<td>지그 ROI 좌표 (16개)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Algorithm3 설정</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>섹션</th>
+<th>항목명</th>
+<th>타입</th>
+<th>기본값</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>model</strong></td>
+<td><code>type</code></td>
+<td>enum</td>
+<td>TensorRT</td>
+<td>모델 타입</td>
+</tr>
+<tr>
+<td></td>
+<td><code>path</code></td>
+<td>string</td>
+<td>"D:/weights/Algorithm3/model.engine"</td>
+<td>모델 파일 경로</td>
+</tr>
+<tr>
+<td><strong>detection_option</strong></td>
+<td><code>threshold_normal_distance</code></td>
+<td>float</td>
+<td>0.1</td>
+<td>정상 거리 임계값 (중심점 대비)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>faultImagePath</code></td>
+<td>string</td>
+<td>"./ad_faultImages/"</td>
+<td>결함 이미지 저장 경로</td>
+</tr>
+<tr>
+<td></td>
+<td><code>save_fault_image</code></td>
+<td>bool</td>
+<td>true</td>
+<td>결함 이미지 저장 여부</td>
+</tr>
+<tr>
+<td></td>
+<td><code>center_filename</code></td>
+<td>string</td>
+<td>"./center.txt"</td>
+<td>중심점 파일 경로</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ROI 구조</strong> (Algorithm2용):</p>
+<table>
+<thead>
+<tr>
+<th>ROI 타입</th>
+<th>개수</th>
+<th>필드</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CELL_ROIS</td>
+<td>18개</td>
+<td>row, col</td>
+<td>행(0~1), 열(0~8)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>box[4]</td>
+<td>x1, y1, x2, y2 (정규화 좌표 0.0~1.0)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>centroid[2]</td>
+<td>center_x, center_y (정규화 좌표)</td>
+</tr>
+<tr>
+<td>GAP_ROIS</td>
+<td>36개</td>
+<td>row, col</td>
+<td>행(0~3), 열(0~8)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>box[4]</td>
+<td>x1, y1, x2, y2 (정규화 좌표)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>centroid[2]</td>
+<td>center_x, center_y (정규화 좌표)</td>
+</tr>
+<tr>
+<td>ZIG_ROIS</td>
+<td>16개</td>
+<td>row, col</td>
+<td>행(0~1), 열(0~7)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>box[4]</td>
+<td>x1, y1, x2, y2 (정규화 좌표)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>centroid[2]</td>
+<td>center_x, center_y (정규화 좌표)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="%F0%9F%93%A4-output-%EB%AA%85%EC%84%B8-lges-dll-%E2%86%92-cns">📤 Output 명세 (LGES DLL → CNS)</h2>
+<p><strong>실제 코드 구조</strong>:</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// 콜백: Fault/Anomaly 검출 시</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IFaultListener</span> {</span>
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">bool</span> <span class="hljs-title">OnFaultDetected</span><span class="hljs-params">(
+        <span class="hljs-keyword">const</span> DetectInputDto&amp; input_dto,
+        <span class="hljs-keyword">const</span> DetectOutputDto&amp; dod
+    )</span> </span>= <span class="hljs-number">0</span>;
+};
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">DetectOutputDto</span> {</span>
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">shared_ptr</span>&lt;Frame&gt; frame;      <span class="hljs-comment">// 원본 프레임</span>
+    cv::Mat visualized_img;            <span class="hljs-comment">// 시각화 이미지</span>
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> takt_time;            <span class="hljs-comment">// 처리 시간 (ms)</span>
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;ResultItem&gt; ab_results;<span class="hljs-comment">// 구조적 결함 목록</span>
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;ResultItem&gt; q_results; <span class="hljs-comment">// 품질 이상 목록</span>
+    ErrorCodeEnum error_code;          <span class="hljs-comment">// 에러 코드</span>
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> error_msg;             <span class="hljs-comment">// 에러 메시지</span>
+};
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ResultItem</span> {</span>
+    DefectTypeEnum defect_type;  <span class="hljs-comment">// 결함 타입</span>
+    <span class="hljs-keyword">float</span> score;                 <span class="hljs-comment">// 신뢰도</span>
+    Box box;                     <span class="hljs-comment">// 바운딩 박스</span>
+};
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Box</span> {</span>
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> x1, y1;  <span class="hljs-comment">// 좌측 상단</span>
+    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> x2, y2;  <span class="hljs-comment">// 우측 하단</span>
+};
+
+</div></code></pre>
+<h3 id="output-%ED%86%B5%ED%95%A9%ED%91%9C">Output 통합표</h3>
+<table>
+<thead>
+<tr>
+<th>콜백 이름</th>
+<th>파라미터<br>구조</th>
+<th>항목명</th>
+<th>타입</th>
+<th>항상<br>존재</th>
+<th>설명</th>
+<th>예시/제약</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>OnFaultDetected</strong></td>
+<td>-</td>
+<td><code>input_dto</code></td>
+<td><code>DetectInputDto</code></td>
+<td>✓</td>
+<td>원본 Input 전체</td>
+<td>frame + plcInfo 전체 구조</td>
+</tr>
+<tr>
+<td>(결함/이상 검출 시)</td>
+<td>-</td>
+<td><code>input_dto.frame</code></td>
+<td><code>shared_ptr&lt;Frame&gt;</code></td>
+<td>✓</td>
+<td>원본 프레임</td>
+<td>index, data, timestamp, ref_count</td>
+</tr>
+<tr>
+<td></td>
+<td>-</td>
+<td><code>input_dto.plcInfo</code></td>
+<td><code>Plc_Info</code></td>
+<td>✓</td>
+<td>원본 PLC 정보</td>
+<td>equip_status</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.</code></td>
+<td><code>frame</code></td>
+<td><code>shared_ptr&lt;Frame&gt;</code></td>
+<td>✓</td>
+<td>원본 프레임 포인터</td>
+<td>input_dto.frame과 동일</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.</code></td>
+<td><code>visualized_img</code></td>
+<td><code>cv::Mat</code></td>
+<td>△</td>
+<td>시각화 이미지</td>
+<td>비어있을 수 있음 (empty Mat)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.</code></td>
+<td><code>takt_time</code></td>
+<td><code>unsigned int</code></td>
+<td>✓</td>
+<td>처리 시간 (ms)</td>
+<td>0~, 기본값 0</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.</code></td>
+<td><code>ab_results</code></td>
+<td><code>vector&lt;ResultItem&gt;</code></td>
+<td>✓</td>
+<td>구조적 결함 목록</td>
+<td>0개 이상 (빈 배열 가능)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.ab_results[i].</code></td>
+<td><code>defect_type</code></td>
+<td><code>DefectTypeEnum</code></td>
+<td>✓</td>
+<td>결함 타입</td>
+<td>모델 의존</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.ab_results[i].</code></td>
+<td><code>score</code></td>
+<td><code>float</code></td>
+<td>✓</td>
+<td>신뢰도</td>
+<td>0.0 ~ 1.0</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.ab_results[i].</code></td>
+<td><code>box.x1</code></td>
+<td><code>unsigned int</code></td>
+<td>✓</td>
+<td>좌측 상단 X</td>
+<td>픽셀 좌표</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.ab_results[i].</code></td>
+<td><code>box.y1</code></td>
+<td><code>unsigned int</code></td>
+<td>✓</td>
+<td>좌측 상단 Y</td>
+<td>픽셀 좌표</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.ab_results[i].</code></td>
+<td><code>box.x2</code></td>
+<td><code>unsigned int</code></td>
+<td>✓</td>
+<td>우측 하단 X</td>
+<td>픽셀 좌표</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.ab_results[i].</code></td>
+<td><code>box.y2</code></td>
+<td><code>unsigned int</code></td>
+<td>✓</td>
+<td>우측 하단 Y</td>
+<td>픽셀 좌표</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.</code></td>
+<td><code>q_results</code></td>
+<td><code>vector&lt;ResultItem&gt;</code></td>
+<td>✓</td>
+<td>품질 이상 목록</td>
+<td>0개 이상 (빈 배열 가능)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.q_results[i].</code></td>
+<td><code>defect_type</code></td>
+<td><code>DefectTypeEnum</code></td>
+<td>✓</td>
+<td>결함 타입</td>
+<td>모델 의존</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.q_results[i].</code></td>
+<td><code>score</code></td>
+<td><code>float</code></td>
+<td>✓</td>
+<td>신뢰도</td>
+<td>0.0 ~ 1.0</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.q_results[i].</code></td>
+<td><code>box.x1</code></td>
+<td><code>unsigned int</code></td>
+<td>✓</td>
+<td>좌측 상단 X</td>
+<td>픽셀 좌표</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.q_results[i].</code></td>
+<td><code>box.y1</code></td>
+<td><code>unsigned int</code></td>
+<td>✓</td>
+<td>좌측 상단 Y</td>
+<td>픽셀 좌표</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.q_results[i].</code></td>
+<td><code>box.x2</code></td>
+<td><code>unsigned int</code></td>
+<td>✓</td>
+<td>우측 하단 X</td>
+<td>픽셀 좌표</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.q_results[i].</code></td>
+<td><code>box.y2</code></td>
+<td><code>unsigned int</code></td>
+<td>✓</td>
+<td>우측 하단 Y</td>
+<td>픽셀 좌표</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.</code></td>
+<td><code>error_code</code></td>
+<td><code>ErrorCodeEnum</code></td>
+<td>✓</td>
+<td>에러 코드</td>
+<td>0=NO_ERROR_ (기본값)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dod.</code></td>
+<td><code>error_msg</code></td>
+<td><code>string</code></td>
+<td>✓</td>
+<td>에러 메시지</td>
+<td>비어있을 수 있음</td>
+</tr>
+<tr>
+<td></td>
+<td>-</td>
+<td><strong>[반환값]</strong></td>
+<td><code>bool</code></td>
+<td>✓</td>
+<td>처리 계속 여부</td>
+<td>true=계속, false=중단</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="%F0%9F%93%8B-%EC%B0%B8%EA%B3%A0%EC%82%AC%ED%95%AD">📋 참고사항</h2>
+<h3 id="keyframestatus-%EA%B0%92">KeyFrameStatus 값</h3>
+<table>
+<thead>
+<tr>
+<th>값</th>
+<th>이름</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Base</td>
+<td>기준 프레임</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Empty</td>
+<td>빈 프레임</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Full</td>
+<td>가득 찬 프레임</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Half</td>
+<td>절반 찬 프레임</td>
+</tr>
+</tbody>
+</table>
+
+
+
+</body></html>

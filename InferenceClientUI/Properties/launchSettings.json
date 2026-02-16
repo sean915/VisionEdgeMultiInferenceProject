@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "InferenceClientUI": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

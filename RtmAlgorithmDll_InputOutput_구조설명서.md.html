@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>RtmAlgorithmDll Input/Output 및 구조 설명서</title>
+
+<style>
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif;
+	font-size: 14px;
+	padding: 0 26px;
+	line-height: 22px;
+	word-wrap: break-word;
+}
+img { max-width: 100%; max-height: 100%; }
+a { text-decoration: none; }
+a:hover { text-decoration: underline; }
+hr { border: 0; height: 2px; border-bottom: 2px solid; }
+h1 { padding-bottom: 0.3em; line-height: 1.2; border-bottom-width: 1px; border-bottom-style: solid; }
+h1, h2, h3 { font-weight: normal; }
+table { border-collapse: collapse; }
+table > thead > tr > th { text-align: left; border-bottom: 1px solid; }
+table > thead > tr > th, table > thead > tr > td, table > tbody > tr > th, table > tbody > tr > td { padding: 5px 10px; }
+table > tbody > tr + tr > td { border-top: 1px solid; }
+blockquote { margin: 0 7px 0 5px; padding: 0 16px 0 10px; border-left-width: 5px; border-left-style: solid; background: rgba(127, 127, 127, 0.1); border-color: rgba(0, 122, 204, 0.5); }
+code { font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 1em; }
+pre { background-color: #f8f8f8; border: 1px solid #cccccc; border-radius: 3px; overflow-x: auto; white-space: pre-wrap; padding: 16px; }
+.hljs-comment, .hljs-quote { color: #8e908c; }
+.hljs-variable, .hljs-template-variable, .hljs-tag, .hljs-name { color: #c82829; }
+.hljs-number, .hljs-built_in, .hljs-literal, .hljs-type { color: #f5871f; }
+.hljs-string, .hljs-symbol { color: #718c00; }
+.hljs-title, .hljs-section { color: #4271ae; }
+.hljs-keyword, .hljs-selector-tag { color: #8959a8; }
+.hljs { display: block; overflow-x: auto; color: #4d4d4c; padding: 0.5em; }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+  </script>
+
+<h1 id="rtmalgorithmdll-inputoutput-%EB%AA%85%EC%84%B8%EC%84%9C-%EB%B0%8F-%EA%B5%AC%EC%A1%B0-%EC%84%A4%EB%AA%85%EC%84%9C">RtmAlgorithmDll Input/Output 명세서 및 구조 설명서</h1>
+<p>RTM(알고리즘) DLL의 입출력 명세, 전체 아키텍처, RTM/CNS 관점 정리 문서입니다.</p>
+
+<h2 id="0-%EB%AA%A9%EC%B0%A8">0. 목차</h2>
+<ol>
+<li><a href="#1-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EA%B0%9C%EC%9A%94">시스템 개요</a></li>
+<li><a href="#2-%EC%A0%84%EC%B2%B4-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98">전체 아키텍처</a></li>
+<li><a href="#3-input-%EB%AA%85%EC%84%B8">Input 명세</a></li>
+<li><a href="#4-output-%EB%AA%85%EC%84%B8">Output 명세</a></li>
+<li><a href="#5-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%9D%90%EB%A6%84">데이터 흐름</a></li>
+<li><a href="#6-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-%EB%82%B4%EB%B6%80-%EA%B5%AC%EC%A1%B0">프로세스 내부 구조</a></li>
+<li><a href="#7-%EC%A0%9C%EA%B3%B5-api-%EC%9A%94%EC%95%BD">제공 API 요약</a></li>
+<li><a href="#8-%EC%B0%B8%EA%B3%A0%EC%82%AC%ED%95%AD">참고사항</a></li>
+<li><a href="#9-rtm-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-dll-%EA%B4%80%EC%A0%90-rtm-%EC%A0%84%EB%8B%AC">[RTM 관점] Input/Output 정의서 및 상황별 정리</a></li>
+<li><a href="#10-cns-ivs-app-%EA%B4%80%EC%A0%90-cns-%EC%A0%84%EB%8B%AC">[CNS 관점] IVS APP 연동 및 의사결정</a></li>
+</ol>
+<hr>
+
+<h2 id="1-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EA%B0%9C%EC%9A%94">1. 시스템 개요</h2>
+<p>RtmAlgorithmDll은 IVS 시스템에서 사용하는 알고리즘 DLL로, 영상 기반 결함 검출을 수행합니다.</p>
+<ul>
+<li><strong>Trigger 모델</strong>: Tab, Horn 객체 검출 (YOLO 형식)</li>
+<li><strong>Defect 모델</strong>: Crop 영역 분류 (Abnormal / Normal / Empty)</li>
+<li><strong>인프런스 백엔드</strong>: ONNX Runtime 또는 TensorRT</li>
+<li><strong>호출 방식</strong>: C# P/Invoke를 통한 DLL 로드 및 콜백 기반 비동기 결과 수신</li>
+</ul>
+<hr>
+
+<h2 id="2-%EC%A0%84%EC%B2%B4-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98">2. 전체 아키텍처</h2>
+<pre><code class="language-mermaid"><div class="mermaid">%%{init: {'theme':'base', 'themeVariables': {'fontSize':'12px'}, 'flowchart':{'nodeSpacing':30, 'rankSpacing':40}}}%%
+graph TB
+    subgraph "External (C# Client)"
+        CLIENT[InferenceClientUI<br>AlgorithmNative]
+    end
+
+    subgraph "RtmAlgorithmDll API"
+        CREATE[CreateAlgorithm]
+        INIT[Initialize]
+        RUN[Run]
+        STOP[Stop]
+        PUSH[PushFrame]
+        CB[SetResultCallback]
+        STATUS[GetStatus]
+        DESTROY[Destroy]
+    end
+
+    subgraph "RtmAlgorithmDll Internal"
+        subgraph "Frame Queue"
+            FQ[frame_queue_owned_<br>maxsize=3]
+        end
+        
+        subgraph "Trigger Worker"
+            TRIG_LOOP[triggerLoop]
+            TRIG_MODEL[Trigger Model<br>Tab/Horn Detection]
+            TRACK[Horn Direction Tracking]
+        end
+        
+        subgraph "Defect Queue"
+            DQ[defect_queue_<br>maxsize=3]
+        end
+        
+        subgraph "Defect Worker"
+            DEF_LOOP[defectLoop]
+            DEF_MODEL[Defect Model<br>Classifier]
+        end
+    end
+
+    subgraph "Output"
+        CALLBACK[ResultCallback]
+    end
+
+    CLIENT -->|CreateAlgorithm| CREATE
+    CLIENT -->|Initialize| INIT
+    CLIENT -->|Run| RUN
+    CLIENT -->|Stop| STOP
+    CLIENT -->|PushFrame| PUSH
+    CLIENT -->|SetResultCallback| CB
+    PUSH --> FQ
+    FQ --> TRIG_LOOP
+    TRIG_LOOP --> TRIG_MODEL
+    TRIG_MODEL --> TRACK
+    TRACK -->|should_trigger| DQ
+    TRACK -->|skip| CALLBACK
+    DQ --> DEF_LOOP
+    DEF_LOOP --> DEF_MODEL
+    DEF_MODEL --> CALLBACK
+
+    style CLIENT fill:#e1f5ff
+    style CALLBACK fill:#ffe1e1
+</div></code></pre>
+<p>아래에서는 RtmAlgorithmDll과 Client 간의 입출력 명세를 상세히 다룹니다.</p>
+<hr>
+
+<h2 id="3-input-%EB%AA%85%EC%84%B8">3. Input 명세 (Client → RtmAlgorithmDll)</h2>
+<p>CNS/IVS APP이 RtmAlgorithmDll에 전달하는 입력은 <strong>설정(AlgorithmConfig)</strong>과 <strong>프레임(FrameData)</strong> 두 가지입니다.</p>
+
+<h3 id="31-api-%ED%98%B8%EC%B6%9C-%EC%88%9C%EC%84%9C">3.1 API 호출 순서</h3>
+<pre class="hljs"><code><div>1. CreateAlgorithm(config)     → handle 반환
+2. SetResultCallback(handle, cb)  → 콜백 등록
+3. Initialize(handle)             → 모델 로드만 (워커 미시작)
+4. Run(handle)                    → 워커 스레드 시작 (triggerLoop, defectLoop)
+5. PushFrame(handle, frame)       → 매 프레임 호출 (반복, Run 상태에서만)
+6. Stop(handle)                   → 워커 중지 (멈춤 시, 재시작 시 Run만 호출)
+7. Destroy(handle)                → 종료 시
+</div></code></pre>
+<p><strong>멈춤 후 재시작</strong>: Stop → Run (Initialize 재호출 불필요)</p>
+
+<h3 id="32-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C-%EA%B5%AC%EC%A1%B0">3.2 실제 코드 구조</h3>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">AlgorithmConfig</span> {</span>
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* triggerModelPath = <span class="hljs-literal">nullptr</span>;
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* defectModelPath = <span class="hljs-literal">nullptr</span>;
+    <span class="hljs-keyword">float</span> confThreshold = <span class="hljs-number">0.5f</span>;
+};
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Frame</span> / <span class="hljs-title">FrameData</span> {</span>
+    <span class="hljs-keyword">uint64_t</span> index = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">uint8_t</span>* data = <span class="hljs-literal">nullptr</span>;   <span class="hljs-comment">// BGR raw pointer</span>
+    <span class="hljs-keyword">int</span> width = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">int</span> height = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">int64_t</span> timestamp = <span class="hljs-number">0</span>;
+};
+</div></code></pre>
+
+<h3 id="33-input-%ED%86%B5%ED%95%A9%ED%91%9C">3.3 Input 통합표</h3>
+<table>
+<thead>
+<tr>
+<th>구조</th>
+<th>항목명</th>
+<th>타입</th>
+<th>필수</th>
+<th>제공 시점</th>
+<th>설명</th>
+<th>예시/제약</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AlgorithmConfig</strong></td>
+<td><code>triggerModelPath</code></td>
+<td><code>const char*</code></td>
+<td>✓</td>
+<td>CreateAlgorithm 시</td>
+<td>Trigger 모델 경로 (ONNX/Engine)</td>
+<td>경로 문자열</td>
+</tr>
+<tr>
+<td></td>
+<td><code>defectModelPath</code></td>
+<td><code>const char*</code></td>
+<td>✓</td>
+<td>CreateAlgorithm 시</td>
+<td>Defect(분류) 모델 경로</td>
+<td>경로 문자열</td>
+</tr>
+<tr>
+<td></td>
+<td><code>confThreshold</code></td>
+<td><code>float</code></td>
+<td>△</td>
+<td>CreateAlgorithm 시</td>
+<td>신뢰도 임계값</td>
+<td>0.5 (기본값)</td>
+</tr>
+<tr>
+<td><strong>FrameData</strong></td>
+<td><code>index</code></td>
+<td><code>uint64_t</code></td>
+<td>✓</td>
+<td>매 프레임</td>
+<td>프레임 번호</td>
+<td>0, 1, 2, ...</td>
+</tr>
+<tr>
+<td></td>
+<td><code>data</code></td>
+<td><code>uint8_t*</code></td>
+<td>✓</td>
+<td>매 프레임</td>
+<td>BGR 이미지 (CV_8UC3)</td>
+<td>연속 메모리, caller 소유</td>
+</tr>
+<tr>
+<td></td>
+<td><code>width</code></td>
+<td><code>int</code></td>
+<td>✓</td>
+<td>매 프레임</td>
+<td>이미지 너비</td>
+<td>픽셀 단위</td>
+</tr>
+<tr>
+<td></td>
+<td><code>height</code></td>
+<td><code>int</code></td>
+<td>✓</td>
+<td>매 프레임</td>
+<td>이미지 높이</td>
+<td>픽셀 단위</td>
+</tr>
+<tr>
+<td></td>
+<td><code>timestamp</code></td>
+<td><code>int64_t</code></td>
+<td>△</td>
+<td>매 프레임</td>
+<td>타임스탬프 (epoch ms)</td>
+<td>밀리초</td>
+</tr>
+<tr>
+<td><strong>PLC 정보</strong></td>
+<td><code>equip_status</code><br>(설비 상태)</td>
+<td><code>int</code></td>
+<td>△</td>
+<td>런타임 (이벤트성)</td>
+<td>설비 상태 (0:Idle, 1 or 2:Active)</td>
+<td>CNS가 읽어 PushFrame 호출 여부 제어. DLL 직접 수신 아님</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="34-%EB%AA%A8%EB%8D%B8-%EB%A9%94%ED%83%80-json">3.4 모델 메타 JSON</h3>
+<p>Initialize 시 <code>cuttermagazine_model</code> 폴더 내 JSON에서 경로 및 설정을 로드합니다.</p>
+<table>
+<thead>
+<tr>
+<th>파일</th>
+<th>역할</th>
+<th>주요 필드</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Trigger_Cathode_V0.1.0.json</code></td>
+<td>Trigger 모델 메타</td>
+<td>model_name, input.shape, output.bindings, class_names(tab, horn), paths.onnx/engine</td>
+</tr>
+<tr>
+<td><code>Classifier_Cathode_V0.1.0.json</code></td>
+<td>Defect 모델 메타</td>
+<td>model_name, input.shape, output.bindings, paths.onnx/engine</td>
+</tr>
+</tbody>
+</table>
+<p><strong>JSON paths 구조:</strong></p>
+<pre class="hljs"><code><div>{
+  "model_name": "...",
+  "input": { "name", "layout": "NCHW", "dtype", "color_order", "shape", "dynamic" },
+  "output": { "bindings": [{ "name", "shape", "bbox_format", "class_start_index" }] },
+  "class_names": ["tab", "horn"],
+  "trtexec": { "precision": "fp32"|"fp16", "workspace" },
+  "paths": { "onnx": "...", "engine": "..." }
+}
+</div></code></pre>
+<hr>
+
+<h2 id="4-output-%EB%AA%85%EC%84%B8">4. Output 명세 (RtmAlgorithmDll → Client)</h2>
+<p>RtmAlgorithmDll은 <strong>ResultCallback</strong>을 통해 판정 결과, 시각화 이미지, 에러 정보를 비동기로 전달합니다.</p>
+
+<h3 id="41-%EC%8B%A4%EC%A0%9C-%EC%BD%94%EB%93%9C-%EA%B5%AC%EC%A1%B0">4.1 실제 코드 구조</h3>
+<p><strong>내부 C++ 구조 (DetectOutputDto)</strong> — 콜백 호출 전 내부에서 사용:</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// C API 콜백: ResultCallbackFunc</span>
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">void</span> (*ResultCallbackFunc)(
+    <span class="hljs-keyword">uint64_t</span> frameIndex,
+    <span class="hljs-keyword">int</span> resultCount,
+    <span class="hljs-keyword">const</span> ResultItemC* results,
+    <span class="hljs-keyword">int</span> errorCode,
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* errorMsg,
+    <span class="hljs-keyword">const</span> <span class="hljs-keyword">uint8_t</span>* imgData,
+    <span class="hljs-keyword">int</span> imgW, <span class="hljs-keyword">int</span> imgH,
+    <span class="hljs-keyword">int</span> imgStrideBytes,
+    <span class="hljs-keyword">int</span> imgCvType
+);
+
+<span class="hljs-comment">// 내부 DTO → C 콜백 매핑</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">DetectOutputDto</span> {</span>
+    cv::Mat visualized_img;                    <span class="hljs-comment">// → imgData, imgW, imgH, imgStrideBytes, imgCvType</span>
+    <span class="hljs-keyword">uint32_t</span> takt_time;                        <span class="hljs-comment">// (C API에는 미전달)</span>
+    std::vector&lt;ResultItem&gt; ab_results;        <span class="hljs-comment">// 이상(불량) 결과</span>
+    std::vector&lt;ResultItem&gt; q_results;         <span class="hljs-comment">// 의심 결과</span>
+    std::vector&lt;ResultItem&gt; normal_results;    <span class="hljs-comment">// 정상 결과</span>
+    <span class="hljs-keyword">int</span> error_code;                           <span class="hljs-comment">// → errorCode</span>
+    std::string error_msg;                     <span class="hljs-comment">// → errorMsg</span>
+};
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ResultItemC</span> {</span>
+    <span class="hljs-keyword">int</span> defect_type;   <span class="hljs-comment">// 0:NONE, 1:NG, 2:OK</span>
+    <span class="hljs-keyword">float</span> score;
+    BoxC box;
+};
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">BoxC</span> {</span>
+    <span class="hljs-keyword">int</span> x1, y1, x2, y2;  <span class="hljs-comment">// 좌상단(x1,y1), 우하단(x2,y2) 픽셀 좌표</span>
+};
+</div></code></pre>
+
+<h3 id="42-output-%ED%86%B5%ED%95%A9%ED%91%9C">4.2 Output 통합표</h3>
+<table>
+<thead>
+<tr>
+<th>콜백<br>호출 시점</th>
+<th>파라미터<br>구조</th>
+<th>항목명</th>
+<th>타입</th>
+<th>항상<br>존재</th>
+<th>설명</th>
+<th>예시/제약</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ResultCallback</strong></td>
+<td>-</td>
+<td><code>frameIndex</code></td>
+<td><code>uint64_t</code></td>
+<td>✓</td>
+<td>원본 프레임 번호</td>
+<td>PushFrame 시 전달한 index</td>
+</tr>
+<tr>
+<td>(Trigger 스킵 / Defect 완료)</td>
+<td>-</td>
+<td><code>resultCount</code></td>
+<td><code>int</code></td>
+<td>✓</td>
+<td>결과 배열 개수</td>
+<td>0: 스킵, 1: Defect 완료 (단일 결과)</td>
+</tr>
+<tr>
+<td></td>
+<td>-</td>
+<td><code>results</code></td>
+<td><code>ResultItemC*</code></td>
+<td>✓</td>
+<td>결과 배열 포인터</td>
+<td>resultCount=0이면 nullptr</td>
+</tr>
+<tr>
+<td></td>
+<td><code>results[i].</code></td>
+<td><code>defect_type</code></td>
+<td><code>int</code></td>
+<td>✓</td>
+<td>판정 타입</td>
+<td>0=NONE, 1=NG, 2=OK (아래 참고)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>results[i].</code></td>
+<td><code>score</code></td>
+<td><code>float</code></td>
+<td>✓</td>
+<td>신뢰도 점수</td>
+<td>0.0 ~ 1.0</td>
+</tr>
+<tr>
+<td></td>
+<td><code>results[i].</code></td>
+<td><code>box.x1</code></td>
+<td><code>int</code></td>
+<td>✓</td>
+<td>바운딩 박스 좌상단 X</td>
+<td>픽셀 좌표 (원본 이미지 기준)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>results[i].</code></td>
+<td><code>box.y1</code></td>
+<td><code>int</code></td>
+<td>✓</td>
+<td>바운딩 박스 좌상단 Y</td>
+<td>픽셀 좌표</td>
+</tr>
+<tr>
+<td></td>
+<td><code>results[i].</code></td>
+<td><code>box.x2</code></td>
+<td><code>int</code></td>
+<td>✓</td>
+<td>바운딩 박스 우하단 X</td>
+<td>픽셀 좌표 (XYXY inclusive)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>results[i].</code></td>
+<td><code>box.y2</code></td>
+<td><code>int</code></td>
+<td>✓</td>
+<td>바운딩 박스 우하단 Y</td>
+<td>픽셀 좌표</td>
+</tr>
+<tr>
+<td></td>
+<td>-</td>
+<td><code>errorCode</code></td>
+<td><code>int</code></td>
+<td>✓</td>
+<td>에러 코드</td>
+<td>ErrorCodeEnum (아래 참고)</td>
+</tr>
+<tr>
+<td></td>
+<td>-</td>
+<td><code>errorMsg</code></td>
+<td><code>const char*</code></td>
+<td>✓</td>
+<td>에러 메시지</td>
+<td>"OK" 또는 상세 메시지</td>
+</tr>
+<tr>
+<td></td>
+<td>-</td>
+<td><code>imgData</code></td>
+<td><code>const uint8_t*</code></td>
+<td>△</td>
+<td>시각화 이미지 BGR 데이터</td>
+<td>콜백 반환 후 무효 — 즉시 복사 필요</td>
+</tr>
+<tr>
+<td></td>
+<td>-</td>
+<td><code>imgW</code></td>
+<td><code>int</code></td>
+<td>✓</td>
+<td>이미지 너비</td>
+<td>픽셀 (imgData가 nullptr면 0)</td>
+</tr>
+<tr>
+<td></td>
+<td>-</td>
+<td><code>imgH</code></td>
+<td><code>int</code></td>
+<td>✓</td>
+<td>이미지 높이</td>
+<td>픽셀</td>
+</tr>
+<tr>
+<td></td>
+<td>-</td>
+<td><code>imgStrideBytes</code></td>
+<td><code>int</code></td>
+<td>✓</td>
+<td>행당 바이트 수 (step)</td>
+<td>imgW * 3 (BGR)</td>
+</tr>
+<tr>
+<td></td>
+<td>-</td>
+<td><code>imgCvType</code></td>
+<td><code>int</code></td>
+<td>✓</td>
+<td>OpenCV 타입</td>
+<td>CV_8UC3 (16)</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="43-%EC%B6%9C%EB%A0%A5-%EC%8B%9C%EC%A0%90%EB%B3%84-%EC%83%81%EC%84%B8">4.3 출력 시점별 상세</h3>
+<table>
+<thead>
+<tr>
+<th>호출 시점</th>
+<th>resultCount</th>
+<th>results</th>
+<th>errorCode</th>
+<th>errorMsg</th>
+<th>imgData</th>
+<th>시각화 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Trigger 스킵</strong></td>
+<td>0</td>
+<td>nullptr</td>
+<td>0</td>
+<td>"OK"</td>
+<td>BGR 이미지</td>
+<td>tab(빨강), horn(파랑) 박스 + 점수, "trigger skipped: {reason}"</td>
+</tr>
+<tr>
+<td><strong>Defect 분류 완료</strong></td>
+<td>1</td>
+<td>ResultItemC[1]</td>
+<td>0 또는 1</td>
+<td>"OK" 또는 "ParseDefectProbs3 failed"</td>
+<td>BGR 이미지</td>
+<td>tab/horn 박스 + used ROI(흰색) + "ab:%.3f no:%.3f | top1:{abnormal|normal|empty} | {Abnormal|Normal|Questionable}"</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="44-%EB%82%B4%EB%B6%80-%EA%B2%B0%EA%B3%BC-%EB%A7%A4%ED%95%91">4.4 내부 결과 → C 콜백 매핑</h3>
+<p>Defect 완료 시 <code>ab_results + q_results + normal_results</code>를 순서대로 합쳐 <code>results</code> 배열로 전달합니다. RtmAlgorithmDll은 분류 모델이 단일 결과만 반환하므로 <strong>resultCount는 항상 1</strong>입니다.</p>
+<p><strong>box 좌표 의미</strong>: Defect 완료 시 <code>results[0].box</code>는 <strong>분류에 사용된 ROI 영역</strong>(원본 프레임 기준)입니다. Tab bbox를 crop하여 분류했을 경우 Tab 영역의 픽셀 좌표입니다.</p>
+<table>
+<thead>
+<tr>
+<th>내부 소스</th>
+<th>defect_type</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ab_results</td>
+<td>1 (NG)</td>
+<td>불량 (Abnormal)</td>
+</tr>
+<tr>
+<td>q_results</td>
+<td>0 (NONE)</td>
+<td>의심 (Questionable) 또는 에러</td>
+</tr>
+<tr>
+<td>normal_results</td>
+<td>2 (OK)</td>
+<td>정상 (Normal)</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="45-defecttypeenum--errorcodeenum-%EC%B0%B8%EA%B3%A0">4.5 DefectTypeEnum / ErrorCodeEnum 참고</h3>
+<p><strong>DefectTypeEnum (defect_type)</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>값</th>
+<th>이름</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>NONE</td>
+<td>판정 불가 (Questionable, Error, 파싱 실패)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>NG</td>
+<td>불량 (Abnormal)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>OK</td>
+<td>정상 (Normal)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ErrorCodeEnum (errorCode)</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>값</th>
+<th>이름</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>NO_ERROR</td>
+<td>정상</td>
+</tr>
+<tr>
+<td>1</td>
+<td>FILE_NOT_FOUND</td>
+<td>파일 없음</td>
+</tr>
+<tr>
+<td>2</td>
+<td>MODEL_LOAD_FAILURE</td>
+<td>모델 로드 실패</td>
+</tr>
+<tr>
+<td>3</td>
+<td>INFERENCE_FAILURE</td>
+<td>인프런스 실패</td>
+</tr>
+<tr>
+<td>4</td>
+<td>INVALID_INPUT</td>
+<td>잘못된 입력</td>
+</tr>
+<tr>
+<td>99</td>
+<td>UNKNOWN_ERROR</td>
+<td>알 수 없는 오류</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="46-c-pinvoke-%EC%82%AC%EC%9A%A9-%EC%B0%B8%EA%B3%A0">4.6 C# P/Invoke 사용 참고</h3>
+<blockquote>
+<p><strong>주의사항</strong>:</p>
+<ul>
+<li><strong>imgData</strong>: 콜백이 반환되면 포인터가 무효화됩니다. 사용하려면 콜백 내에서 <code>Marshal.Copy</code> 또는 <code>Buffer.MemoryCopy</code>로 즉시 복사하세요.</li>
+<li><strong>results</strong>: <code>resultCount &gt; 0</code>일 때 <code>Marshal.PtrToStructure</code>로 <code>ResultItemC</code> 배열을 복사하세요. 포인터는 콜백 반환 후 무효화됩니다.</li>
+<li><strong>errorMsg</strong>: <code>IntPtr</code>인 경우 <code>Marshal.PtrToStringAnsi</code>로 문자열 복사.</li>
+</ul>
+</blockquote>
+<pre class="hljs"><code><div><span class="hljs-comment">// C# 콜백 예시 (구조만)</span>
+<span class="hljs-keyword">void</span> OnResult(ulong frameIndex, <span class="hljs-keyword">int</span> resultCount, IntPtr results,
+    <span class="hljs-keyword">int</span> errorCode, IntPtr errorMsg,
+    IntPtr imgData, <span class="hljs-keyword">int</span> imgW, <span class="hljs-keyword">int</span> imgH, <span class="hljs-keyword">int</span> imgStrideBytes, <span class="hljs-keyword">int</span> imgCvType)
+{
+    <span class="hljs-comment">// 1. imgData 복사 (필요 시)</span>
+    <span class="hljs-keyword">if</span> (imgData != IntPtr.Zero && imgW > 0 && imgH > 0) {
+        <span class="hljs-keyword">var</span> bytes = <span class="hljs-keyword">new</span> byte[imgStrideBytes * imgH];
+        Marshal.Copy(imgData, bytes, 0, bytes.Length);
+    }
+    <span class="hljs-comment">// 2. results 복사</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = 0; i < resultCount; i++) {
+        <span class="hljs-keyword">var</span> item = Marshal.PtrToStructure&lt;ResultItemC&gt;(results + i * Marshal.SizeOf&lt;ResultItemC&gt;());
+    }
+}
+</div></code></pre>
+<hr>
+
+<h2 id="5-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%9D%90%EB%A6%84">5. 데이터 흐름</h2>
+<p>Input → Output까지의 처리 흐름은 다음과 같습니다.</p>
+<pre><code class="language-mermaid"><div class="mermaid">%%{init: {'theme':'base', 'themeVariables': {'fontSize':'11px'}, 'sequence':{'actorMargin':40}}}%%
+sequenceDiagram
+    participant C as C# Client
+    participant API as RtmAlgorithmDll
+    participant FQ as Frame Queue
+    participant TW as Trigger Worker
+    participant DQ as Defect Queue
+    participant DW as Defect Worker
+    participant CB as Callback
+
+    C->>API: CreateAlgorithm + SetResultCallback + Initialize
+    loop Every Frame
+        C->>API: PushFrame(frame)
+        API->>FQ: push(OwnedFrame)
+        TW->>FQ: pop()
+        TW->>TW: Trigger Model (Tab/Horn)
+        TW->>TW: Horn Direction Tracking
+        alt should_trigger
+            TW->>DQ: push(DefectJob)
+            DW->>DQ: pop()
+            DW->>DW: Defect Model (Classify)
+            DW->>CB: callback(vis, results)
+        else skip
+            TW->>CB: callback(vis, resultCount=0)
+        end
+    end
+</div></code></pre>
+<hr>
+
+<h2 id="6-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-%EB%82%B4%EB%B6%80-%EA%B5%AC%EC%A1%B0">6. 프로세스 내부 구조</h2>
+<p>RtmAlgorithmDll 내부는 Trigger Worker와 Defect Worker 두 스레드가 큐를 통해 연동됩니다.</p>
+<pre><code class="language-mermaid"><div class="mermaid">%%{init: {'theme':'base', 'themeVariables': {'fontSize':'12px'}}}%%
+graph LR
+    subgraph "Queues"
+        Q1[frame_queue_owned_<br>maxsize=3]
+        Q2[defect_queue_<br>maxsize=3]
+    end
+
+    subgraph "Threads"
+        T1[trigger_worker_]
+        T2[defect_worker_]
+    end
+
+    T1 -->|pop| Q1
+    T1 -->|push| Q2
+    T2 -->|pop| Q2
+</div></code></pre>
+
+<h3 id="61-triggerloop">6.1 triggerLoop</h3>
+<blockquote>
+<p><strong>역할</strong>: 프레임에서 Tab/Horn 검출 후, Horn이 위로 회전하는 시점에서만 Defect 큐로 전달.</p>
+</blockquote>
+<ul>
+<li>입력: <code>frame_queue_owned_</code></li>
+<li>처리: Letterbox → Trigger 모델 → NMS → Tab/Horn bbox → Horn 방향 추적 (Up 시 캡처)</li>
+<li>출력: <code>should_trigger</code> 시 <code>defect_queue_</code>에 DefectJob push, 아니면 콜백(vis, 0)</li>
+</ul>
+
+<h3 id="62-defectloop">6.2 defectLoop</h3>
+<blockquote>
+<p><strong>역할</strong>: Tab ROI crop을 Defect 모델로 분류하여 Abnormal/Normal/Questionable 판정.</p>
+</blockquote>
+<ul>
+<li>입력: <code>defect_queue_</code> (DefectJob: frame_bgr, crop_bgr, trig.tab/horn 등)</li>
+<li>처리: Crop → Letterbox → Defect 모델 → p_ab, p_no 파싱 → MIN_VALID(0.3), SURE(0.7) 기준 판정</li>
+<li>출력: 콜백(vis, results) — ab_results / q_results / normal_results</li>
+</ul>
+<hr>
+
+<h2 id="7-%EC%A0%9C%EA%B3%B5-api-%EC%9A%94%EC%95%BD">7. 제공 API 요약</h2>
+<p>RtmAlgorithmDll이 제공하는 C API 목록입니다.</p>
+<table>
+<thead>
+<tr>
+<th>함수</th>
+<th>반환</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CreateAlgorithm(const AlgorithmConfig* config)</code></td>
+<td><code>void*</code></td>
+<td>Detector 인스턴스 생성, handle 반환</td>
+</tr>
+<tr>
+<td><code>Initialize(void* handle)</code></td>
+<td><code>int</code></td>
+<td>모델 로드만 (0=성공, -1=실패). 워커 미시작</td>
+</tr>
+<tr>
+<td><code>Run(void* handle)</code></td>
+<td><code>int</code></td>
+<td>워커 스레드 시작 (0=성공, -1=실패). 이미 RUNNING이면 0</td>
+</tr>
+<tr>
+<td><code>Stop(void* handle)</code></td>
+<td><code>int</code></td>
+<td>워커 스레드 중지 (0=성공). 이미 중지됐으면 0</td>
+</tr>
+<tr>
+<td><code>PushFrame(void* handle, const FrameData* frame)</code></td>
+<td><code>int</code></td>
+<td>프레임 큐에 추가 (0=성공, -1=실패). Run 상태에서만 유효</td>
+</tr>
+<tr>
+<td><code>SetResultCallback(void* handle, ResultCallbackFunc callback)</code></td>
+<td><code>void</code></td>
+<td>결과 콜백 등록</td>
+</tr>
+<tr>
+<td><code>GetStatus(void* handle)</code></td>
+<td><code>int</code></td>
+<td>AlgorithmStatus (UNLOADED=0, CREATED=1, INITIALIZING=2, READY=3, RUNNING=4, ERROR=5)</td>
+</tr>
+<tr>
+<td><code>GetVersion()</code></td>
+<td><code>const char*</code></td>
+<td>알고리즘 버전 ("1.0.0")</td>
+</tr>
+<tr>
+<td><code>Destroy(void* handle)</code></td>
+<td><code>void</code></td>
+<td>인스턴스 해제</td>
+</tr>
+</tbody>
+</table>
+<hr>
+
+<h2 id="8-%EC%B0%B8%EA%B3%A0%EC%82%AC%ED%95%AD">8. 참고사항</h2>
+<p>배포 및 운영 시 참고할 경로, 트리거 조건, 판정 기준입니다.</p>
+<h3 id="81-%ED%8C%8C%EC%9D%BC-%EA%B2%BD%EB%A1%9C">8.1 파일 경로</h3>
+<p>모델 메타 JSON은 <code>D:/workspace/.../cuttermagazine_model</code> 기준으로 로드됩니다. 실제 배포 시 경로 수정 필요.</p>
+
+<h3 id="82-%ED%8A%B8%EB%A6%AC%EA%B1%B0-%EC%A1%B0%EA%B1%B4">8.2 트리거 조건</h3>
+<ul>
+<li>Tab + Horn 둘 다 검출 (score ≥ 0.4)</li>
+<li>Horn 중심 Y가 이전 대비 <strong>위로</strong> 이동 (Up 방향) 시에만 Defect 큐로 전달</li>
+<li><code>tracking_max_age=10</code> 프레임마다 추적 상태 리셋</li>
+</ul>
+
+<h3 id="83-%ED%8C%90%EC%A0%95-%EA%B8%B0%EC%A4%80">8.3 판정 기준</h3>
+<table>
+<thead>
+<tr>
+<th>topScore 범위</th>
+<th>최종 판정</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 0.3 (MIN_VALID)</td>
+<td>Error</td>
+</tr>
+<tr>
+<td>0.3 ~ 0.7</td>
+<td>Questionable</td>
+</tr>
+<tr>
+<td>≥ 0.7 (SURE) &amp;&amp; top==AB</td>
+<td>Abnormal (NG)</td>
+</tr>
+<tr>
+<td>≥ 0.7 &amp;&amp; top==NO</td>
+<td>Normal (OK)</td>
+</tr>
+</tbody>
+</table>
+<p>이어서 RTM 전달용 정의서와 상황별 정리를 다룹니다.</p>
+
+<hr>
+<h2 id="9-rtm-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-dll-%EA%B4%80%EC%A0%90-rtm-%EC%A0%84%EB%8B%AC">9. [RTM 관점] Input/Output 정의서 및 상황별 정리</h2>
+<p>RTM 전달용으로 Input/Output 전체 목록, API 사용 시점, 상황별 구현 여부를 정리합니다.</p>
+
+<h3 id="91-inputoutput-%EC%A0%95%EC%9D%98%EC%84%9C-%EC%A0%84%EC%B2%B4-list">9.1 Input/Output 정의서 (전체 List)</h3>
+
+<h4 id="910-input-api-%EC%82%AC%EC%9A%A9-%EC%8B%9C%EC%A0%90">9.1.0 Input API 사용 시점 요약</h4>
+<table>
+<thead>
+<tr>
+<th>Input API</th>
+<th>사용 시점</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CreateAlgorithm(config)</td>
+<td>비런타임 — 앱 시작/재시작 시 1회</td>
+<td>triggerModelPath, defectModelPath, confThreshold</td>
+</tr>
+<tr>
+<td>SetResultCallback(handle, cb)</td>
+<td>비런타임 — Initialize 직전</td>
+<td>콜백 등록</td>
+</tr>
+<tr>
+<td>Initialize(handle)</td>
+<td>비런타임 — 모델 로드 시 1회</td>
+<td>JSON 로드, TRT/ONNX 세션 생성 (워커 미시작)</td>
+</tr>
+<tr>
+<td>Run(handle)</td>
+<td>비런타임/런타임 — 워커 시작 시. 멈춤 후 재시작 시</td>
+<td>triggerLoop, defectLoop 스레드 시작</td>
+</tr>
+<tr>
+<td>Stop(handle)</td>
+<td>런타임 — 멈춤 시</td>
+<td>워커 중지 (모델은 유지, Run으로 재시작 가능)</td>
+</tr>
+<tr>
+<td>PushFrame(handle, frame)</td>
+<td>런타임 — 매 프레임 (Run 상태에서만)</td>
+<td>FrameData: index, data, width, height, timestamp</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="911-input-%EC%A0%84%EC%B2%B4-%EB%AA%A9%EB%A1%9D">9.1.1 Input 전체 목록</h4>
+<table>
+<thead>
+<tr>
+<th>분류</th>
+<th>항목</th>
+<th>타입</th>
+<th>제공 주체</th>
+<th>API / 사용 시점</th>
+<th>설명</th>
+<th>현재 구현</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>사용자 입력<br>(IVS System Config)</strong></td>
+<td>triggerModelPath</td>
+<td>string</td>
+<td>CNS/IVS APP</td>
+<td>CreateAlgorithm 시</td>
+<td>Trigger 모델 경로 (ONNX/Engine)</td>
+<td>✓ AlgorithmConfig</td>
+</tr>
+<tr>
+<td></td>
+<td>defectModelPath</td>
+<td>string</td>
+<td>CNS/IVS APP</td>
+<td>CreateAlgorithm 시</td>
+<td>Defect(분류) 모델 경로</td>
+<td>✓ AlgorithmConfig</td>
+</tr>
+<tr>
+<td></td>
+<td>confThreshold</td>
+<td>float</td>
+<td>CNS/IVS APP</td>
+<td>CreateAlgorithm 시</td>
+<td>신뢰도 임계값</td>
+<td>✓ AlgorithmConfig (실제 코드에서 하드코딩 0.4 사용)</td>
+</tr>
+<tr>
+<td><strong>JSON 파일<br>(RTM 제공)</strong></td>
+<td>Trigger_Cathode_V0.1.0.json</td>
+<td>JSON</td>
+<td>RTM (모델 변환 산출물)</td>
+<td>Initialize 시 (model_setup 내부)</td>
+<td>Trigger 모델 메타: input/output shape, paths.onnx/engine, class_names</td>
+<td>✓ 하드코딩 경로로 로드</td>
+</tr>
+<tr>
+<td></td>
+<td>Classifier_Cathode_V0.1.0.json</td>
+<td>JSON</td>
+<td>RTM (모델 변환 산출물)</td>
+<td>Initialize 시 (model_setup 내부)</td>
+<td>Defect 모델 메타: input/output shape, paths.onnx/engine</td>
+<td>✓ 하드코딩 경로로 로드</td>
+</tr>
+<tr>
+<td><strong>PLC 정보</strong></td>
+<td>cell_id</td>
+<td>string</td>
+<td>PLC (CNS 경유)</td>
+<td>런타임 (매 트리거/검출)</td>
+<td>생산 셀 식별자</td>
+<td>✗ C API에 미노출 (DetectInputDTO/PlcInfo 구조만 존재)</td>
+</tr>
+<tr>
+<td></td>
+<td>pallet_num</td>
+<td>unsigned int</td>
+<td>PLC (CNS 경유)</td>
+<td>런타임</td>
+<td>팔레트 번호</td>
+<td>✗ C API에 미노출</td>
+</tr>
+<tr>
+<td></td>
+<td>설비 상태 (Busy 등)</td>
+<td>int</td>
+<td>PLC</td>
+<td>런타임</td>
+<td>on/off, Idle/Active</td>
+<td>✗ DLL 내부 미사용</td>
+</tr>
+<tr>
+<td><strong>프레임 스트림</strong></td>
+<td>FrameData</td>
+<td>struct</td>
+<td>VideoReceiver/RTSP</td>
+<td>런타임 (매 프레임)</td>
+<td>index, data, width, height, timestamp</td>
+<td>✓ PushFrame</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="912-output-%EC%A0%84%EC%B2%B4-%EB%AA%A9%EB%A1%9D">9.1.2 Output 전체 목록</h4>
+<table>
+<thead>
+<tr>
+<th>분류</th>
+<th>항목</th>
+<th>타입</th>
+<th>전달 방식</th>
+<th>API / 시점</th>
+<th>설명</th>
+<th>현재 구현</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>판정 결과</strong></td>
+<td>defect_type</td>
+<td>int</td>
+<td>ResultCallback</td>
+<td>결함/정상/의심 검출 시</td>
+<td>0=NONE, 1=NG, 2=OK</td>
+<td>✓ results[i].defect_type</td>
+</tr>
+<tr>
+<td></td>
+<td>score</td>
+<td>float</td>
+<td>ResultCallback</td>
+<td>동일</td>
+<td>신뢰도 0.0~1.0</td>
+<td>✓ results[i].score</td>
+</tr>
+<tr>
+<td></td>
+<td>box</td>
+<td>BoxC</td>
+<td>ResultCallback</td>
+<td>동일</td>
+<td>ROI 픽셀 좌표</td>
+<td>✓ results[i].box</td>
+</tr>
+<tr>
+<td><strong>시각화</strong></td>
+<td>imgData, imgW, imgH</td>
+<td>uint8_t*, int, int</td>
+<td>ResultCallback</td>
+<td>동일</td>
+<td>BGR 시각화 이미지</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>에러</strong></td>
+<td>errorCode, errorMsg</td>
+<td>int, char*</td>
+<td>ResultCallback</td>
+<td>동일</td>
+<td>에러 코드/메시지</td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>알고리즘 상태</strong></td>
+<td>AlgorithmStatus</td>
+<td>int</td>
+<td>GetStatus</td>
+<td>폴링 (CNS 요청 시)</td>
+<td>UNLOADED=0, CREATED=1, INITIALIZING=2, READY=3, RUNNING=4, ERROR=5</td>
+<td>✓ GetStatus(handle)</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="92-%EC%83%81%ED%99%A9%EB%B3%84-%EA%B5%AC%ED%98%84-%EC%97%AC%EB%B6%80--api-input-%EC%82%AC%EC%9A%A9-%EC%8B%9C%EC%A0%90">9.2 상황별 구현 여부 &amp; API(Input) 사용 시점</h3>
+<table>
+<thead>
+<tr>
+<th>상황</th>
+<th>구현 여부</th>
+<th>API(Input) 사용 시점</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1) [비런타임] 처음 실행 시</strong></td>
+<td>✓</td>
+<td>CreateAlgorithm → SetResultCallback → Initialize → Run(handle)</td>
+<td>Initialize: 모델 로드. Run: 워커 시작</td>
+</tr>
+<tr>
+<td><strong>2) [비런타임] 사용자가 멈춘 후, 재 시작 시</strong></td>
+<td>✓</td>
+<td>Stop(handle) → Run(handle)</td>
+<td>Initialize 재호출 불필요. Run만으로 재시작</td>
+</tr>
+<tr>
+<td><strong>3) [비런타임] config(단순 조정) 값 변경 후, 재 시작 시</strong></td>
+<td>△</td>
+<td>Destroy → CreateAlgorithm(새 config) → SetResultCallback → Initialize</td>
+<td>confThreshold 등 변경 시 handle 재생성 필요. updateConfig 미구현</td>
+</tr>
+<tr>
+<td><strong>4) [비런타임] config(모델 update) 값 변경 후, 재 시작 시</strong></td>
+<td>△</td>
+<td>Destroy → CreateAlgorithm(새 경로) → SetResultCallback → Initialize</td>
+<td>모델 경로 변경 시 handle 재생성. JSON 경로는 Initialize 내부 하드코딩</td>
+</tr>
+<tr>
+<td><strong>5) [런타임] PLC 정보(설비 상태) on → off 변경 시</strong></td>
+<td>✗</td>
+<td>-</td>
+<td>DLL이 PLC 정보를 입력으로 받지 않음. CNS/IVS APP에서 처리 필요</td>
+</tr>
+<tr>
+<td><strong>6) [런타임] PLC 정보(설비 상태) off → on 변경 시</strong></td>
+<td>✗</td>
+<td>-</td>
+<td>동일. PushFrame은 FrameData만 수신</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="93-%EB%94%A5%EB%9F%AC%EB%8B%9D-%EB%AA%A8%EB%8D%B8-%EB%B3%80%ED%99%98-json-%EC%82%AC%EC%9A%A9-%EC%97%AC%EB%B6%80">9.3 딥러닝 모델 변환 JSON 사용 여부</h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>사용 여부</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>모델 변환 산출 JSON</td>
+<td><strong>✓ 사용</strong></td>
+<td>Trigger_Cathode_V0.1.0.json, Classifier_Cathode_V0.1.0.json — Initialize(model_setup) 시 LoadModelMetaJson으로 로드. paths.onnx, paths.engine, input.shape, output.bindings, trtexec.precision 등 사용</td>
+</tr>
+<tr>
+<td>로드 경로</td>
+<td>하드코딩</td>
+<td>modelDir = "D:/workspace/.../cuttermagazine_model" — RTM 제공 경로로 배포 시 수정 필요</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="94-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%83%81%ED%83%9C%EA%B0%92-%EC%99%B8%EB%B6%80-%EC%A0%84%EB%8B%AC-%EB%B0%A9%EB%B2%95">9.4 알고리즘 상태값 외부 전달 방법</h3>
+<table>
+<thead>
+<tr>
+<th>방법</th>
+<th>구현</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GetStatus(handle)</td>
+<td>✓</td>
+<td>CNS가 폴링으로 호출. 반환값: 0=UNLOADED, 1=CREATED, 2=INITIALIZING, 3=READY, 4=RUNNING, 5=ERROR</td>
+</tr>
+<tr>
+<td>콜백 내 errorCode</td>
+<td>✓</td>
+<td>ResultCallback 호출 시 errorCode 전달 (0=정상, 1~99=에러)</td>
+</tr>
+<tr>
+<td>상태 변경 이벤트 콜백</td>
+<td>✗</td>
+<td>상태 변경 시 자동 알림 API 없음. 폴링만 가능</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="95-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-dll-%ED%8C%90%EC%A0%95%EB%A1%9C%EC%A7%81-%EC%A0%81%EC%9A%A9-%EC%97%AC%EB%B6%80">9.5 알고리즘 DLL 판정로직 (by LGES) 적용 여부</h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>적용</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trigger 판정</td>
+<td>✓</td>
+<td>Tab + Horn 검출, Horn 방향(Up) 추적 — LGES Python 로직 기반 C++ 구현</td>
+</tr>
+<tr>
+<td>Defect 판정</td>
+<td>✓</td>
+<td>MIN_VALID(0.3), SURE(0.7) 기준 Abnormal/Normal/Questionable — LGES 판정로직 적용</td>
+</tr>
+<tr>
+<td>defect_type 매핑</td>
+<td>✓</td>
+<td>NONE=0, NG=1, OK=2 — DefectTypeEnum</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2 id="10-cns-ivs-app-%EA%B4%80%EC%A0%90-cns-%EC%A0%84%EB%8B%AC">10. [CNS 관점] IVS APP 연동 및 의사결정</h2>
+<p>CNS/IVS APP에서 RtmAlgorithmDll을 연동할 때의 처리 정책, 후처리, Final Decision 형식을 정리합니다.</p>
+
+<h3 id="101-%EB%B9%84%EB%9F%B0%ED%83%80%EC%9E%84--%EB%9F%B0%ED%83%80%EC%9E%84-%EC%B2%98%EB%A6%AC-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95">10.1 비런타임/런타임 처리 의사결정 (LGES)</h3>
+<table>
+<thead>
+<tr>
+<th>상황</th>
+<th>Algo DLL 처리</th>
+<th>기본 기능(RTSP) 처리</th>
+<th>권장 (RtmAlgorithmDll 기준)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1) [비런타임] 사용자 멈춤 or config 변경 시</strong></td>
+<td>멈춤: Stop(handle). 재시작: Run(handle). config 변경 시: Destroy → CreateAlgorithm → Initialize → Run</td>
+<td>RTSP 수신 중단/재연결</td>
+<td>멈춤 시 Stop, PushFrame 중단. 재시작 시 Run만 호출 (Initialize 불필요)</td>
+</tr>
+<tr>
+<td><strong>2) [런타임] PLC 설비 상태 on → off</strong></td>
+<td>DLL은 PLC 미수신 — PushFrame 계속 가능</td>
+<td>CNS가 RTSP/프레임 전달 중단 여부 결정</td>
+<td>CNS에서 설비 off 시 PushFrame 중단 또는 빈 프레임 전달 정책 필요</td>
+</tr>
+<tr>
+<td><strong>3) [런타임] PLC 설비 상태 off → on</strong></td>
+<td>PushFrame 재개</td>
+<td>RTSP 재연결</td>
+<td>CNS에서 설비 on 시 PushFrame 재개</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>참고 (IVS PKG Prewelding)</strong>: IVS 참고 구조에서는 PLC Task가 Cell ID, Pallete, Busy를 읽고 설비 상태에 따라 동작을 제어합니다. RtmAlgorithmDll은 PLC 입력을 받지 않으므로, <strong>CNS/IVS APP이 PLC 상태를 읽어 PushFrame 호출 여부를 제어</strong>해야 합니다.</p>
+</blockquote>
+
+<h3 id="102-ivs-app-%ED%9B%84%EC%B2%98%EB%A6%AC-%EB%A1%9C%EC%A7%81-%EA%B3%B5%EC%9C%A0">10.2 IVS APP 후처리 로직 공유</h3>
+<p>Algo DLL은 <strong>판정 결과(defect_type, score, box)</strong>만 반환합니다. 후처리(알람 매핑, CSV/로그 저장, PLC 알람 전송 등)는 <strong>CNS/IVS APP</strong>에서 수행합니다.</p>
+<table>
+<thead>
+<tr>
+<th>후처리 항목</th>
+<th>담당</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>defect_type → 알람 코드 변환</td>
+<td>CNS</td>
+<td>NG=1, OK=0 등 PLC 규격에 맞게 매핑</td>
+</tr>
+<tr>
+<td>이미지/CSV/로그 저장</td>
+<td>CNS</td>
+<td>ResultCallback의 imgData 복사 후 저장</td>
+</tr>
+<tr>
+<td>PLC 알람 출력</td>
+<td>CNS</td>
+<td>DLL은 PLC 쓰기 없음</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="103-final-decision-%EC%88%AB%EC%9E%90--%EC%8A%A4%ED%8A%B8%EB%A7%81">10.3 Final Decision 값 — 숫자 vs 문자열</h3>
+<table>
+<thead>
+<tr>
+<th>형식</th>
+<th>현재 DLL 출력</th>
+<th>권장</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>숫자</strong></td>
+<td>defect_type: 0, 1, 2 (int)</td>
+<td>PLC/시스템 연동 시 숫자 사용 권장. 매핑 간단</td>
+</tr>
+<tr>
+<td><strong>문자열</strong></td>
+<td>errorMsg 등에 "Abnormal", "Normal" 텍스트 포함 가능</td>
+<td>로그/UI 표시용으로 CNS에서 defect_type → "NG"/"OK"/"NONE" 변환</td>
+</tr>
+</tbody>
+</table>
+<p><strong>현재</strong>: DLL은 <code>defect_type</code> (int)로 전달. CNS에서 필요 시 문자열로 변환.</p>
+
+</body></html>
