@@ -37,4 +37,4 @@ struct DetectResultDto {
     }
 };
 
-} // namespace HMSTACK
+} // namespace HmCutter

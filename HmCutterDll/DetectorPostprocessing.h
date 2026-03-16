@@ -33,6 +33,7 @@ namespace HmCutter {
         int frameW, int frameH,
         float cell_min_score, float pnp_min_score,
         float nms_iou_thr,
+        int classStartIndex,
         HmCutter::Detector::DefectJob& job);
 
     void MapTriggerOutsToJob_Letterbox_Ort(

@@ -5,6 +5,7 @@
 #include "Include/Listners//IDetector.h"
 #include "Include/Listners/IResultListner.h"
 #include "Include/Utills/ThreadSafeQueue.h"
+#include "Include/Utills/NoInitAllocator.h"
 #include "Include/Data/Frame.h"
 #include <Data/ResultItemC.h>
 #include <Ort/OrtSession.h>
@@ -17,11 +18,8 @@ using CResultCallback = void(*)(uint64_t frameIndex,
     const ResultItemC* results,
     int errorCode,
     const char* errorMsg,
-    const uint8_t* imgData,
-    int imgW,
-    int imgH,
-    int imgStrideBytes,
-    int imgCvType);
+    const ImageDataC* visImg,     // 시각화된 이미지 (bbox/label 오버레이)
+    const ImageDataC* rawImg);    // 시각화되지 않은 원본 이미지
 
 enum class InputDType {
     FP32,
@@ -64,14 +62,15 @@ public:
     void model_setup() override;
     void updateConfig(const std::string&, const std::string&) override {}
     void setCResultCallback(CResultCallback cb);
-    AlgorithmStatus getStatus() const;
+    AlgorithmStatusInfo getStatus() const;
 
     int pushFrame(const FrameData& frame);
+    int notifyEquipStatus();  // 토글: 호출할 때마다 0↔1 반환
+    FrameQueueStatsC getFrameStats() const;
     enum class CropMode { TAB, HORN, FULL } crop_mode_ = CropMode::TAB;
 
     enum class UsedRoiKind { TAB, HORN, FULL, PRE_CROP };
 
-    // Detector.h 내부에 추가
     struct DefectJob {
         uint64_t frameIndex = 0;
         cv::Mat frame_bgr;
@@ -83,7 +82,8 @@ public:
             float tab_score = 0.f;
             float horn_score = 0.f;
         } trig;
-        int64_t ts_ms = 0;
+        char ts_input[FRAME_TIMESTAMP_MAX] = {};  // 입력 프레임의 타임스탬프 문자열
+        std::string ts_str;  // 판정 시각 문자열 "HH:MM:SS.mmm"
 
         // ✅ 추가: "이번 분류에 실제로 사용한 ROI(원본 frame 기준)"
         cv::Rect used_roi_abs;          // frame 기준 ROI
@@ -91,9 +91,9 @@ public:
     };
 
 private:
-    //void inferenceLoop();
     void triggerLoop();
     void defectLoop();
+    void warmupModels();
     void loadMetaData(const std::filesystem::path& trigger_meta, const std::filesystem::path& defect_meta);
     bool LoadModelMetaJson(
         const std::filesystem::path& jsonPath,
@@ -138,17 +138,15 @@ private:
     std::filesystem::path trigger_engine_path_;
     std::filesystem::path defect_onnx_path_;
     std::filesystem::path defect_engine_path_;
-    std::filesystem::path modelDir = L"D:/workspace/IVS.SW.INFERENCE.cppNcsharp/InferenceClient/inferenceClient/x64/Debug/stackmagazine_model";
 
-
-    std::thread worker_;
-    std::thread worker2_;
-    // Detector.cpp 상단 또는 적절한 위치에 evaluate_defect_cpp 함수 정의 추가
-   
+    std::filesystem::path triggerModelDir = L"D:/workspace/IVS.SW.INFERENCE.cppNcsharp/InferenceClient/inferenceClient/x64/Debug/stackmagazine_model";
+    std::filesystem::path defectModelDir  = L"D:/workspace/IVS.SW.INFERENCE.cppNcsharp/InferenceClient/inferenceClient/x64/Debug/stackmagazine_model";
+    std::string triggerModelName_ = "Trigger_Cathode_V0.1.0";    // 확장자 없는 파일명
+    std::string defectModelName_  = "Classifier_Cathode_V0.1.0"; // 확장자 없는 파일명
 
     std::atomic<bool> running_{false};
 
-    AlgorithmStatus status_{AlgorithmStatus::CREATED};
+    AlgorithmStatusInfo status_;   // is_running + timestamp_ms
     CResultCallback c_callback_ = nullptr;
 
     // DLL 내부에서 소유할 프레임(중요: data 포인터 위험 제거)
@@ -158,8 +156,8 @@ private:
         int height = 0;
         int cvType = 0;          // 예: CV_8UC3
         int strideBytes = 0;     // step
-        int64_t timestamp = 0;
-        std::vector<uint8_t> buf; // 이미지 bytes
+        char timestamp[FRAME_TIMESTAMP_MAX] = {};
+        RawByteVec buf;          // ✅ 0-초기화 없는 바이트 벡터
     };
 
     ThreadSafeQueue<OwnedFrame> frame_queue_owned_{ 3 }; // 기존 frame_queue_ 대신 사용(권장)
@@ -172,6 +170,9 @@ private:
     float cell_min_score_ = 0.4f;
     float pnp_min_score_ = 0.4f;
     int crop_padding_ = 10;
+
+    // ✅ UI에서 입력받은 Input ROI (area()==0이면 전체 프레임)
+    cv::Rect input_roi_;
 
     // per-class Q/AB thresholds (from config_.thresholds)
     float ok_q_thr_  = 0.3f;
@@ -192,6 +193,14 @@ private:
 
     // defect meta
     std::string defect_trt_precision_{ "fp32" };
+    std::vector<std::string> defect_class_names_{ "abnormal", "normal" };
+
+    // equip status toggle (0 or 1)
+    std::atomic<int> equip_status_{ 0 };
+
+    // ✅ 프레임 인덱스 추적 (디버깅용)
+    std::atomic<uint64_t> last_pushed_index_{ 0 };
+    std::atomic<uint64_t> last_popped_index_{ 0 };
 
     // thread + queue
     std::thread trigger_worker_;

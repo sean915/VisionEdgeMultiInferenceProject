@@ -71,7 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)\InferenceClientUI\bin\Debug\net9.0-windows10.0.17763.0</OutDir>
+    <OutDir>D:\workspace\IVS.SW.INFERENCE.cppNcsharp\InferenceClient\inferenceClient\DllTestCharpVer\bin\Debug\net8.0-windows</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>D:\workspace\IVS.SW.INFERENCE.cppNcsharp\InferenceClient\inferenceClient\DllTestCharpVer\bin\Release\net8.0-windows</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -164,6 +167,8 @@
     <ClInclude Include="include\Listners\IDetector.h" />
     <ClInclude Include="include\Ort\OrtSession.h" />
     <ClInclude Include="include\Trt\TrtSession.h" />
+    <ClInclude Include="include\Utills\DebugLog.h" />
+    <ClInclude Include="include\Utills\NoInitAllocator.h" />
     <ClInclude Include="include\Utills\ThreadSafeQueue.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>

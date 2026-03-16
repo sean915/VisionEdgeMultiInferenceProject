@@ -6,7 +6,7 @@
 namespace HmCutter {
 
     // 두 박스(TLXYWH 기준)의 IoU 계산
-    // NMS에서 겹침 정도 판단에 사용됨
+    // NMS에서 겹힘 정도 판단에 사용됨
     static inline void Softmax2(float a, float b, float& outA, float& outB)
     {
         const float m = std::max(a, b);
@@ -87,6 +87,7 @@ namespace HmCutter {
         int frameW, int frameH,
         float tab_min_score, float horn_min_score,
         float nms_iou_thr,
+        int classStartIndex,
         HmCutter::Detector::DefectJob& job)
     {
         (void)modelW; (void)modelH;
@@ -100,31 +101,34 @@ namespace HmCutter {
         const size_t elemCount = !outFp32.empty() ? outFp32.size() : outFp16.size();
         if (elemCount == 0) return;
 
+        // classStartIndex 기반으로 채널 수 계산: bbox(classStartIndex개) + class scores
+        const int numChannels = classStartIndex + 2; // tab, horn 2개 클래스
+
         enum Layout { CHW_1x6xN, ROW_1xNx6, ROW_Nx6, UNKNOWN };
         Layout layout = UNKNOWN;
         int64_t N = 0;
 
         // 출력 shape 자동 판별
-        if (outShape.size() == 3 && outShape[0] == 1 && outShape[1] == 6 && outShape[2] > 0) {
+        if (outShape.size() == 3 && outShape[0] == 1 && outShape[1] == numChannels && outShape[2] > 0) {
             layout = CHW_1x6xN;
             N = outShape[2];
         }
-        else if (outShape.size() == 3 && outShape[0] == 1 && outShape[2] == 6 && outShape[1] > 0) {
+        else if (outShape.size() == 3 && outShape[0] == 1 && outShape[2] == numChannels && outShape[1] > 0) {
             layout = ROW_1xNx6;
             N = outShape[1];
         }
-        else if (outShape.size() == 2 && outShape[1] == 6 && outShape[0] > 0) {
+        else if (outShape.size() == 2 && outShape[1] == numChannels && outShape[0] > 0) {
             layout = ROW_Nx6;
             N = outShape[0];
         }
-        else if (outShape.size() == 1 && outShape[0] > 0 && (outShape[0] % 6) == 0) {
+        else if (outShape.size() == 1 && outShape[0] > 0 && (outShape[0] % numChannels) == 0) {
             layout = ROW_Nx6;
-            N = outShape[0] / 6;
+            N = outShape[0] / numChannels;
         }
         else {
-            if ((elemCount % 6) == 0) {
+            if ((elemCount % numChannels) == 0) {
                 layout = ROW_Nx6;
-                N = (int64_t)(elemCount / 6);
+                N = (int64_t)(elemCount / numChannels);
             }
             else {
                 return;
@@ -139,7 +143,7 @@ namespace HmCutter {
                 flat = (int64_t)ch * N + i;
             }
             else {
-                flat = i * 6 + ch;
+                flat = i * numChannels + ch;
             }
 
             if (!GetTrigVal_Trt(outFp16, outFp32, flat, v)) return 0.f;
@@ -156,8 +160,8 @@ namespace HmCutter {
             float h = get_val(3, i);
             if (w <= 0.f || h <= 0.f) continue;
 
-            float class_0_score = get_val(4, i);
-            float class_1_score = get_val(5, i);
+            float class_0_score = get_val(classStartIndex, i);
+            float class_1_score = get_val(classStartIndex + 1, i);
 
             //Softmax2(class_0_score, class_1_score, class_0_score, class_1_score);
 
@@ -360,13 +364,30 @@ namespace HmCutter {
     ResultItemC ToCResult(const HmCutter::ResultItem& r)
     {
         ResultItemC c{};
-        c.defect_type = static_cast<int>(r.defect_type);
-        c.score = r.score;
         c.box.x1 = r.box.x1;
         c.box.y1 = r.box.y1;
         c.box.x2 = r.box.x2;
         c.box.y2 = r.box.y2;
+
+        // 복수 예측 결과
+        int n = (int)r.preds.size();
+        if (n > RESULT_PREDS_MAX) n = RESULT_PREDS_MAX;
+        c.pred_count = n;
+        for (int i = 0; i < n; ++i) {
+            c.preds[i].pred_score = r.preds[i].score;
+            strncpy_s(c.preds[i].pred_label, RESULT_LABEL_MAX, r.preds[i].label.c_str(), _TRUNCATE);
+            strncpy_s(c.preds[i].decision, RESULT_STR_MAX, r.preds[i].decision.c_str(), _TRUNCATE);
+        }
+        if (n == 0 && !r.pred_label.empty()) {
+            c.pred_count = 1;
+            c.preds[0].pred_score = r.pred_score;
+            strncpy_s(c.preds[0].pred_label, RESULT_LABEL_MAX, r.pred_label.c_str(), _TRUNCATE);
+            strncpy_s(c.preds[0].decision, RESULT_STR_MAX, r.decision.c_str(),  _TRUNCATE);
+        }
+
+        strncpy_s(c.final_decision,  RESULT_STR_MAX, r.final_decision.c_str(),  _TRUNCATE);
+        strncpy_s(c.input_timestamp, RESULT_STR_MAX, r.input_timestamp.c_str(), _TRUNCATE);
         return c;
     }
 
-} // namespace HMSTACK
+} // namespace HmCutter
